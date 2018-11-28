@@ -7,4 +7,8 @@ Download the latest binary from ...
 
 ## If you want to set up a server application that collects images from Pixiv daily rankings
 
-Use the sql file as a template for the database that will be used to store images downloaded from Pixiv
+1. Use the sql file as a template for the database that will be used to store images downloaded from Pixiv
+2. Make sure the required packages are installed for php and python (try running the scripts), this includes but not limited to python virtual frame buffer, selenium & geckodriver, pandas, gd, pdo ...
+3. Disable SELinux, Firewall, etc. to make sure the scripts will run correctly
+4. Add database login information to the php scripts
+5. Call the download.py and upload.php from cron every day when the rankings refreshes(https://www.pixiv.net/info.php?id=311)
