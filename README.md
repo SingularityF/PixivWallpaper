@@ -1,5 +1,5 @@
 # PixivWallpaper
-Set Windows wallpaper based on daily Pixiv rankings
+Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 ## If you want to set your Windows wallpaper with Pixiv high rankers
 
