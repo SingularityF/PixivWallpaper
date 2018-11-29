@@ -1,6 +1,7 @@
 from pyvirtualdisplay import Display
 import pandas as pd
 import os
+import glob
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,6 +17,10 @@ driver.get("https://www.pixiv.net/ranking.php?mode=daily&content=illust")
 def prepare_dir(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
+    else:
+        files=glob.glob(dir_name+"/*")
+        for f in files:
+            os.remove(f)
 
 def large_img_url(url):
     substr="c/600x600/"
@@ -24,8 +29,6 @@ def large_img_url(url):
     return newurl
 
 def download_image(url,all_cookies,img_name,referer):
-    dir_name="images"
-    prepare_dir(dir_name)
     headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
              'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -33,13 +36,16 @@ def download_image(url,all_cookies,img_name,referer):
              'Accept-Language': 'en-US,en;q=0.8',
              'Connection': 'keep-alive',
              'Referer': referer}
-    cookies = {}
+    cookies = {}  
     for s_cookie in all_cookies:
         cookies[s_cookie["name"]]=s_cookie["value"]
     response=requests.get(url,cookies=cookies,headers=headers)
     with open(dir_name+"/"+img_name,"wb") as f:
         f.write(response.content)
 
+dir_name="images"
+prepare_dir(dir_name)
+  
 medium_urls=[]
 illust_ids=[]
 artworks=driver.find_elements_by_class_name("ranking-item")
