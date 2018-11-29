@@ -15,7 +15,7 @@ height = root.winfo_screenheight()
 
 url="http://ga.singf.space/pixiv/selectpaper.php"
 
-r = requests.post(url, data = {"ar":width/height})
+r = requests.post(url, data = {"ar":float(width)/float(height)})
 
 with open("wallpaper.jpg","wb") as f:
     f.write(r.content)
