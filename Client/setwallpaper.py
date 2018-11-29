@@ -13,7 +13,7 @@ root = tkinter.Tk()
 width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 
-url="http://ga.singf.space/pixiv/selectpaper.php"
+url="http://ga.singf.space/pixiv/select_paper.php"
 
 r = requests.post(url, data = {"ar":float(width)/float(height)})
 
