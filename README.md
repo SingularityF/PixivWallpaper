@@ -5,7 +5,7 @@ Set Windows wallpaper based on daily Pixiv rankings
 
 Download the latest binary from ...
 
-Double click and run it to get the latest Pixiv high ranking illustration that fits your screen size to the same folder and set that as Windows wallpaper
+Double click and run it to download the latest Pixiv high ranking illustration that fits your screen size to the same folder and set that as your Windows wallpaper
 
 ## If you want to set up a server application that collects images from Pixiv daily rankings
 
