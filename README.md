@@ -14,3 +14,6 @@ Double click and run it to download the latest Pixiv high ranking illustration t
 3. Disable SELinux, Firewall, etc. to make sure the scripts will run correctly
 4. Add database login information to the php scripts
 5. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
+
+## Special notes
+The py scripts are written in python 3
