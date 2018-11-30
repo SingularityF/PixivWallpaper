@@ -26,7 +26,10 @@ Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be n
 
     - `selenium`
     - `pyvirtualdisplay`
-    - 
+    - `pandas`
+    - `requests`
+    
+5. Make sure your server has `Xvfb` and `geckodriver` installed
   
 5. Add database login information to the php script upload_user.php
 
