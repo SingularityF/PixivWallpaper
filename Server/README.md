@@ -10,7 +10,7 @@ Use the `pixiv_db_schema.sql` file as a guide to create a new database. The RDBM
 
 This server will download illustrations from Pixiv and process the images then upload them into the database.
 
-Scripts `download.py`, `gradient.php`, `paper_user.php`, `upload.php`, `upload_user.php` will be needed for this server.
+Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be needed for this server.
 
 1. Disable SELinux, Firewall, etc. to make sure the scripts will run correctly
 
