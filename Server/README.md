@@ -29,7 +29,7 @@ Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be n
     - `pandas`
     - `requests`
     
-5. Make sure your server has `Xvfb` and `geckodriver` installed
+5. Make sure your server has `Xvfb` and `geckodriver` installed, don't forget to update your Firefox as well to be compatible with the installed `geckodriver`
   
 6. Add database login information to `upload_user.php`
 
