@@ -10,7 +10,7 @@ $pdo = new PDO($dsn, $user, $pass);
 
 #$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$query=$pdo->prepare("SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1");
+$query=$pdo->prepare("SELECT A.*, B.Score FROM images_l A, (SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1) B WHERE A.IllustID=B.IllustID");
 
 $ratio=$_POST["ar"];
 
