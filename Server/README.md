@@ -31,6 +31,6 @@ Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be n
     
 5. Make sure your server has `Xvfb` and `geckodriver` installed
   
-5. Add database login information to the php script upload_user.php
+6. Add database login information to `upload_user.php`
 
-6. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
+7. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
