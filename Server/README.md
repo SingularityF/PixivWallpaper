@@ -1,19 +1,20 @@
-# PixivWallpaper
-Set Windows wallpaper with daily Pixiv high ranking illustrations
+# Server application setup guide
 
-## If you want to set your Windows wallpaper with Pixiv high rankers
+You can split the application into multiple parts handled by different servers or you can run all of the scripts in a single server. 
 
-Download the latest binary from https://github.com/SingularityF/PixivWallpaper/releases if you use a 64-bit machine, or you can install python on your machine and run setwallpaper.py in the Client folder
+## Configure the pixiv server
 
-Double click and run it to download the latest Pixiv high ranking illustration that fits your screen size to the same folder and set that as your Windows wallpaper
+This server will download illustrations from Pixiv and process the images then upload them into the database.
 
-## If you want to set up a server application that collects images from Pixiv daily rankings
-
-1. Use the sql file as a template for the database that will be used to store images downloaded from Pixiv
-2. Make sure the required packages are installed for php and python (try running the scripts), this includes but not limited to python virtual frame buffer, selenium & geckodriver, pandas, gd, pdo ...
-3. Disable SELinux, Firewall, etc. to make sure the scripts will run correctly
-4. Add database login information to the php scripts
-5. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
-
-## Special notes
-The py scripts are written in python 3
+1. Disable SELinux, Firewall, etc. to make sure the scripts will run correctly
+2. Install python3 and php (developed on php7)
+3. Install extensions for php
+  - PDO
+  - GD
+  - MySQL
+4. Install packages for python3
+  - selenium
+  - pyvirtualdisplay
+  - 
+5. Add database login information to the php scripts
+6. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
