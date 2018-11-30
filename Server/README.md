@@ -12,15 +12,15 @@ This server will download illustrations from Pixiv and process the images then u
 
 3. Install extensions for php
 
-  - PDO
-  - GD
-  - MySQL
+    - PDO
+    - GD
+    - MySQL
   
 4. Install packages for python3
 
-  - selenium
-  - pyvirtualdisplay
-  - 
+    - selenium
+    - pyvirtualdisplay
+    - 
   
 5. Add database login information to the php scripts
 
