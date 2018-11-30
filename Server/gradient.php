@@ -1,7 +1,7 @@
 <?php
-function imgcompress($im){
-	return imagescale($im,240);
-}
+#function imgcompress($im){
+#	return imagescale($im,240);
+#}
 
 function pixel($im,$x,$y){
 	$rgb = imagecolorat($im, $x, $y);
@@ -10,7 +10,6 @@ function pixel($im,$x,$y){
 }
 
 # Penalize high contrast part so that black and white images won't have a large score
-# Also penalize low contrast part
 function trans($x){
 	$c=80;
 	return tanh($x/$c)*$c;
@@ -26,10 +25,10 @@ function normgrad($pixel1,$pixel2){
 function calc_gradient($img_path){
 	if(explode(".",$img_path)[1]=="jpg"){
 		$im = imagecreatefromjpeg($img_path);
-		$im=imgcompress($im);
+		#$im=imgcompress($im);
 	}else if(explode(".",$img_path)[1]=="png"){
 		$im = imagecreatefrompng($img_path);
-		$im=imgcompress($im);
+		#$im=imgcompress($im);
 	}else{
 		die("Image format not supported");
 	}
