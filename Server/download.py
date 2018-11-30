@@ -29,6 +29,12 @@ def large_img_url(url):
     newurl=url[:x]+url[x+len(substr):]
     return newurl
 
+def thumb_img_url(url):
+    substr="c/600x600/"
+    x=url.find(substr)
+    newurl=url[:x]+"c/240x480/"+url[x+len(substr):]
+    return newurl
+
 def download_image(url,all_cookies,img_name,referer):
     headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -68,7 +74,9 @@ for i,url in enumerate(medium_urls):
         print("Unable to download image ranking {}".format(rank))
         continue
     output_name="{}_d.{}".format(rank,img_url.split(".")[-1])
+    output_name_t="{}_t.{}".format(rank,img_url.split(".")[-1])
     download_image(large_img_url(img_url),driver.get_cookies(),output_name,driver.current_url)
+    download_image(thumb_img_url(img_url),driver.get_cookies(),output_name_t,driver.current_url)
     df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":output_name,"Downloaded":downloaded},ignore_index=True)
 
 driver.quit()
