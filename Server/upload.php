@@ -2,6 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require("gradient.php");
+
 $csvfile = array_map("str_getcsv",file("artwork_info.csv"));
 $csvheader=array_shift($csvfile);
 
@@ -19,7 +21,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 function upload_img($img_path,$ranking,$illustid,$format,$type){
 	$pdo=$GLOBALS["pdo"];
-	$query=$pdo->prepare("INSERT INTO images(Image,Width,Height,AspectRatio,Checksum,Entropy,Format,Type,IllustID,Ranking) VALUES(:img,:width,:height,:ratio,MD5(Image),999,:format,:type,:illustid,:ranking)");
+	$query=$pdo->prepare("INSERT INTO images(Image,Width,Height,AspectRatio,Checksum,Entropy,Format,Type,IllustID,Ranking,AvgGradient) VALUES(:img,:width,:height,:ratio,MD5(Image),999,:format,:type,:illustid,:ranking,:gradient)");
 	$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images WHERE Checksum=?");
 	
 	$img=fopen($img_path,"rb");
@@ -29,6 +31,8 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	if($duplicate_query->fetch()[0]!=0){
 		return;
 	}
+	
+	$gradient=calc_gradient($img_path);
 	
 	$size=getimagesize($img_path);
 	$ratio=$size[0]/$size[1];
@@ -44,6 +48,7 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	# File info
 	$query->bindParam(":format",$format);
 	$query->bindParam(":type",$type);
+	$query->bindParam(":gradient",$gradient);
 	
 	# Artwork info
 	$query->bindParam(":ranking",$ranking);
