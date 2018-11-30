@@ -22,6 +22,6 @@ This server will download illustrations from Pixiv and process the images then u
     - pyvirtualdisplay
     - 
   
-5. Add database login information to the php scripts
+5. Add database login information to the php script upload_user.php
 
 6. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
