@@ -21,18 +21,23 @@ function normgrad($pixel1,$pixel2){
 	$norm=sqrt(pow($r,2)+pow($g,2)+pow($b,2));
 	return $norm;
 } 
-
-function calc_gradient($img_path){
+function load_img($img_path){
 	if(explode(".",$img_path)[1]=="jpg"){
 		$im = imagecreatefromjpeg($img_path);
 		#$im=imgcompress($im);
 	}else if(explode(".",$img_path)[1]=="png"){
 		$im = imagecreatefrompng($img_path);
 		#$im=imgcompress($im);
+	}else if(explode(".",$img_path)[1]=="png"){
+		$im=imagecreatefromgif($img_path);
 	}else{
 		die("Image format not supported");
 	}
-	
+	return($im);
+}
+
+function calc_gradient($img_path){
+	$im=load_img($img_path);	
 	$lenx=imagesx($im);
 	$leny=imagesy($im);
 	$pixel_count=($lenx-1)*$leny;
