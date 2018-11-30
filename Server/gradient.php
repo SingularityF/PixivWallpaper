@@ -1,7 +1,7 @@
 <?php
-#function imgcompress($im){
-#	return imagescale($im,240);
-#}
+function imgcompress($im){
+	return imagescale($im,240);
+}
 
 function pixel($im,$x,$y){
 	$rgb = imagecolorat($im, $x, $y);
@@ -30,6 +30,7 @@ function load_img($img_path){
 		#$im=imgcompress($im);
 	}else if(explode(".",$img_path)[1]=="png"){
 		$im=imagecreatefromgif($img_path);
+		#$im=imgcompress($im);
 	}else{
 		die("Image format not supported");
 	}

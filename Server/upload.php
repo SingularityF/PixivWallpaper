@@ -35,7 +35,7 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 
 	}else if($type=="L"){
 		$query=$pdo->prepare("INSERT INTO images_l(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking)");
-		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images_l WHERE Checksum=?");
+		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images_l WHERE IllustID=?");
 	}
 	
 	$img=fopen($img_path,"rb");
@@ -60,15 +60,22 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 			$size[0]=imagesx($im);
 			$size[1]=imagesy($im);
 			$ratio=$size[0]/$size[1];
-			$md5=md5($img);
 		}else{
 			$type="O";
 		}
 	}
 
-	$duplicate_query->execute(array($md5));
-	if($duplicate_query->fetch()[0]!=0){
-		return;
+	if($type=="L"||$type=="O"){
+		$duplicate_query->execute(array($illustid));
+		if($duplicate_query->fetch()[0]!=0){
+			return;
+		}
+
+	}else{
+		$duplicate_query->execute(array($md5));
+		if($duplicate_query->fetch()[0]!=0){
+			return;
+		}
 	}
 	
 	# Upload image
@@ -82,6 +89,7 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	# File info
 	$query->bindParam(":format",$format);
 	$query->bindParam(":type",$type);
+	
 	if($type=="T"){
 		$gradient=calc_gradient($img_path);
 		$query->bindParam(":gradient",$gradient);
