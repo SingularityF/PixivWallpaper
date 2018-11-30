@@ -33,4 +33,4 @@ Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be n
   
 6. Add database login information to `upload_user.php`
 
-7. Call download.py and upload.php from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
+7. Call `download.py` and `upload.php` from cron every day when the rankings refresh (https://www.pixiv.net/info.php?id=311)
