@@ -39,4 +39,6 @@ Scripts `download.py`, `gradient.php`, `upload.php`, `upload_user.php` will be n
 
 This server will handle the client requests and provide GUI for users.
 
-Scripts `paper_user.py`, `select_paper.php`, `pick_paper.php` are needed.
+Scripts `paper_user.php`, `select_paper.php`, `pick_paper.php` are needed.
+
+Just set up the server as a webserver that runs php and add database login information to `paper_user.php`
