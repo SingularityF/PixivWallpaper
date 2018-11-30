@@ -1,6 +1,6 @@
 # Server application setup guide
 
-You can split the application into multiple parts handled by different servers or you can run all of the scripts in a single server. 
+You can split the application into multiple parts handled by different servers or you can run all of the scripts in a single server if you think that's powerful enough. 
 
 ## Configure the database server
 
