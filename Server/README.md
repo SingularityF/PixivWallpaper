@@ -2,6 +2,9 @@
 
 You can split the application into multiple parts handled by different servers or you can run all of the scripts in a single server. 
 
+## Configure the database server
+
+
 ## Configure the pixiv server
 
 This server will download illustrations from Pixiv and process the images then upload them into the database.
