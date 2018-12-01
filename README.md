@@ -8,6 +8,10 @@ Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 [![Showcase](https://imgur.com/OkqTJv5.gif)](https://imgur.com/OkqTJv5)
 
+将p站每日排行设为壁纸/桌布 [使用说明](https://github.com/SingularityF/PixivWallpaper/blob/master/README.cn.md)
+
+Pixivのイラストデイリーランキングから一番いいのを壁紙にするソフトです [使い方＆ダウンロード](https://github.com/SingularityF/PixivWallpaper/blob/master/README.jp.md)
+
 ## Description
 
 This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
