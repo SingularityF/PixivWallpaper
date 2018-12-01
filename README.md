@@ -16,7 +16,7 @@ All you need is a double click, and your wallpaper is set in seconds! If you don
 
 ## Download client application
 
-Download the latest binary from [here](https://github.com/SingularityF/PixivWallpaper/releases) if you use a 64-bit machine, or you can install python on your machine and run setwallpaper.py in the Client folder.
+Download the latest binary from [here](https://github.com/SingularityF/PixivWallpaper/releases) if you use a 64-bit machine. Otherwise, you can install python3 on your machine and run set_wallpaper.py in the Client folder.
 
 ## If you want to set up a server application that lets clients set Pixiv wallpapers
 
