@@ -5,7 +5,7 @@ Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
 
-All you need is double clicking, and your wallpaper is set in seconds! If you don't like it, you also have the choice to choose your own wallpaper from Pixiv high ranking illustrations, also with just a few clicks!
+All you need is a double click, and your wallpaper is set in seconds! If you don't like it, you also have the choice to choose your own wallpaper from Pixiv high ranking illustrations, also with just a few clicks!
 
 ## Download client application
 
