@@ -1,6 +1,8 @@
 # PixivWallpaper
 
-![GitHub](https://img.shields.io/github/license/SingularityF/PixivWallpaper.svg)
+![License](https://img.shields.io/github/license/SingularityF/PixivWallpaper.svg)
+
+![Download All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)
 
 Set Windows wallpaper with daily Pixiv high ranking illustrations
 
