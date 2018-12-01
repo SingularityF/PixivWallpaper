@@ -41,4 +41,4 @@ This server will handle the client requests and provide GUI for users.
 
 Scripts `paper_user.php`, `select_paper.php`, `pick_paper.php` are needed.
 
-Just set up the server as a webserver that runs php and add database login information to `paper_user.php`.
+Just set up the server as a web server that runs php and add database login information to `paper_user.php`.
