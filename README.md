@@ -1,5 +1,7 @@
 # PixivWallpaper
-![PixivWallpaper](https://img.shields.io/SingularityF/PixivWallpaper/AFNetworking.svg)
+
+![GitHub](https://img.shields.io/github/license/SingularityF/PixivWallpaper.svg)
+
 Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 ## Description
