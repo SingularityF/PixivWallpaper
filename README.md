@@ -5,7 +5,7 @@
 ![GitHub release](https://img.shields.io/github/release/SingularityF/PixivWallpaper.svg)
 
 Set Windows wallpaper with daily Pixiv high ranking illustrations
-![](https://imgur.com/OkqTJv5.gif)
+![Showcase](https://imgur.com/OkqTJv5.gif)
 ## Description
 
 This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
