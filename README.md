@@ -1,11 +1,13 @@
 # PixivWallpaper
 
-![License](https://img.shields.io/github/license/SingularityF/PixivWallpaper.svg)
-![Download All Releases](https://img.shields.io/github/downloads/SingularityF/PixivWallpaper/total.svg)
-![GitHub release](https://img.shields.io/github/release/SingularityF/PixivWallpaper.svg)
+[![License](https://img.shields.io/github/license/SingularityF/PixivWallpaper.svg)](https://opensource.org/licenses/MIT)
+[![Download All Releases](https://img.shields.io/github/downloads/SingularityF/PixivWallpaper/total.svg)](https://github.com/SingularityF/PixivWallpaper/releases)
+[![GitHub release](https://img.shields.io/github/release/SingularityF/PixivWallpaper.svg)](https://github.com/SingularityF/PixivWallpaper/releases/latest)
 
 Set Windows wallpaper with daily Pixiv high ranking illustrations
-![https://imgur.com/OkqTJv5](https://imgur.com/OkqTJv5.gif)
+
+[![Showcase](https://imgur.com/OkqTJv5.gif)](https://imgur.com/OkqTJv5)
+
 ## Description
 
 This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
