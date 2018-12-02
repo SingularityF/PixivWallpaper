@@ -30,7 +30,7 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 		$query=$pdo->prepare("INSERT INTO images(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking)");
 		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images WHERE Checksum=?");
 	}else if($type=="T"){
-		$query=$pdo->prepare("INSERT INTO images_t(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,AvgGradient) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:gradient)");
+		$query=$pdo->prepare("INSERT INTO images_t(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,AvgGradient,Variance) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:gradient,:variance)");
 		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images_t WHERE Checksum=?");
 
 	}else if($type=="L"){
@@ -45,16 +45,15 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	$ratio=$size[0]/$size[1];
 
 	if($type=="L"){
-		if($size[0]>2560){
+		if($size[0]>2560||filesize($img_path)>8388608){
 			$im=load_img($img_path);
 			$im=orig_scale($im);
 			ob_start();
-			if($format=="jpg"){
-				imagejpeg($im);
-			}else if($format=="png"){
-				imagepng($im);
-			}else if($format=="gif"){
+			if($format=="gif"){
 				imagegif($im);
+			}else{
+				imagejpeg($im);
+				$format="jpg";
 			}
 			$img = ob_get_clean();
 			$size[0]=imagesx($im);
@@ -93,6 +92,9 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	if($type=="T"){
 		$gradient=calc_gradient($img_path);
 		$query->bindParam(":gradient",$gradient);
+		$variance=calc_variance($img_path);
+		$query->bindParam(":variance",$variance);
+
 	}
 	
 	# Artwork info
