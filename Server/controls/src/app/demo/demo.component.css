@@ -1,0 +1,24 @@
+.number-input{
+    max-width: 6em;
+    margin-left:1em;
+    margin-right: 1.5em;
+}
+
+.rounded-border{
+    border-radius:.7em;
+}
+
+.loader {
+    border: 0.7em solid #f3f3f3; /* Light grey */
+    border-top: 0.7em solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    animation: spin 0.5s linear infinite;
+    bottom: 0;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
