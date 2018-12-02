@@ -12,6 +12,7 @@ Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 Pixivのイラストデイリーランキングから一番いいのを壁紙にするソフトです [使い方＆ダウンロード](https://github.com/SingularityF/PixivWallpaper/blob/master/README.jp.md)
 
+## Demo
 
 Find out the best wallpaper from today's Pixiv daily rankings recommended by the application with our [demo](https://singf.space/pixiv/controls/demo) here!
 
