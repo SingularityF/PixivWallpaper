@@ -7,7 +7,7 @@ function orig_scale($im){
 }
 
 
-require("gradient.php");
+require("processing.php");
 
 $csvfile = array_map("str_getcsv",file("artwork_info.csv"));
 $csvheader=array_shift($csvfile);
