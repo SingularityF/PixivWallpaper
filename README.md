@@ -14,7 +14,7 @@ Pixivのイラストデイリーランキングから一番いいのを壁紙に
 
 ## Demo
 
-Find out the best wallpaper from today's Pixiv daily rankings recommended by the application with our [demo](https://singf.space/pixiv/controls/demo) here!
+Find out the best wallpaper from today's Pixiv daily rankings recommended by our application with our [demo](https://singf.space/pixiv/controls/demo) here!
 
 ## Description
 
