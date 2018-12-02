@@ -9,6 +9,16 @@ function pixel($im,$x,$y){
 	return $colors;
 }
 
+function pixelnorm($im,$x,$y){
+	$rgb = imagecolorat($im, $x, $y);
+	$colors = imagecolorsforindex($im, $rgb);
+	$r=$colors["red"]/255;
+	$g=$colors["green"]/255;
+	$b=$colors["blue"]/255;
+	$norm=sqrt(pow($r,2)+pow($g,2)+pow($b,2));
+	return $norm;
+}
+
 # Penalize high contrast part so that black and white images won't have a large score
 function trans($x){
 	$c=80;
@@ -35,6 +45,26 @@ function load_img($img_path){
 		die("Image format not supported");
 	}
 	return($im);
+}
+
+function calc_variance($img_path){
+	$im=load_img($img_path);
+	$lenx=imagesx($im);
+        $leny=imagesy($im);
+        $pixel_count=($lenx-1)*$leny;
+	$luminosity=array();
+	for($y=0;$y<$leny;$y++){
+		for($x=0;$x<$lenx-1;$x++){
+			array_push($luminosity,pixelnorm($im,$x,$y));
+		}
+	}
+	$mean=array_sum($luminosity)/$pixel_count;
+	$squares=array();
+	for($i=0;$i<count($luminosity);$i++){
+		array_push($squares,pow($luminosity[$i]-$mean,2));
+	}
+	$variance=array_sum($squares)/$pixel_count;
+	return $variance;
 }
 
 function calc_gradient($img_path){
