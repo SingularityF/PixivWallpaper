@@ -15,8 +15,13 @@ $query_demo=$pdo->prepare("SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-20*
 
 $ratio=$_POST["ar"];
 $demo=$_POST["demo"];
+# Also accept get parameters, currently only for demo mode
+$demo_g=$_GET["demo"];
+$ratio_g=$_GET["ar"];
 
-if(is_null($ratio)){
+$img_info=$_GET["info"];
+
+if(is_null($ratio) && is_null($ratio_g)){
     die("No post parameter detected");
 }
 
@@ -29,10 +34,18 @@ if(is_null($demo)){
 	$res=$query_demo->fetch(PDO::FETCH_ASSOC);
 }
 
+if(!is_null($demo_g)){
+	$query_demo->execute(array($ratio_g));
+	$res=$query_demo->fetch(PDO::FETCH_ASSOC);
+}
 #echo $res["Checksum"];
 
-$format=$res["Format"];
+if(is_null($img_info)){
+	$format=$res["Format"];
 
-header("Content-type: image/".$format);
-echo $res["Image"];
+	header("Content-type: image/".$format);
+	echo $res["Image"];
+}else{
+	echo $res["IllustID"];
+}
 ?>
