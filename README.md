@@ -18,6 +18,8 @@ This application runs on Windows that sets the **best** suited illustration from
 
 All you need is a double click, and your wallpaper is set in seconds! If you don't like it, you also have the choice to choose your own wallpaper from Pixiv high ranking illustrations, also with just a few clicks!
 
+Find out the best wallpaper recommended by the application from today's Pixiv daily rankings with our [demo](https://singf.space/pixiv/controls/demo) here.
+
 ## Download client application
 
 Download the latest binary from [here](https://github.com/SingularityF/PixivWallpaper/releases) if you use a 64-bit machine. Otherwise, you can install python3 on your machine and run set_wallpaper.py in the Client folder.
