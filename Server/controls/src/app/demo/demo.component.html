@@ -1,0 +1,35 @@
+<div class="container">
+  <h2 class="mt-3">Enter your screen resolution</h2>
+  <ngb-alert *ngIf="showAlert" type="danger" (close)="showAlert=false">Invalid resolution</ngb-alert>
+  <form class="form-inline">
+    <div class="form-group m-auto">
+      <label>Width</label>
+      <input class="form-control number-input" value="1920" type="text" maxlength="4" #widthInput>
+      <label>Height</label>
+      <input class="form-control number-input" value="1080" type="text" maxlength="4" #heightInput>
+      <button class="btn btn-primary" (click)="loadBestMatch(widthInput.value,heightInput.value)">Confirm</button>
+    </div>
+  </form>
+
+
+  <h2 class="mt-5">And we'll find you the best wallpaper from today's Pixiv daily ranking for your screen!</h2>
+  <div class="text-center">
+    <div class="position-relative d-inline-block bg-secondary border rounded-border">
+      <div class="loader position-absolute m-3" [ngbCollapse]="!imageLoading"></div>
+      <img class="rounded-border" style="max-width:100%" [src]="imageLocation" (load)="imageLoading=false">
+    </div>
+    <div class="mt-2">
+      <a [href]="pixivLink">
+        <h4>See this illustration on Pixiv</h4>
+      </a>
+    </div>
+  </div>
+
+
+  <h2 class="mt-5">Want this illustration in its original resolution to be your wallpaper?</h2>
+  <div class="text-center">
+    <a href="https://github.com/SingularityF/PixivWallpaper/releases/latest"><h4>Download the latest windows client from here!</h4></a>
+  </div>
+
+
+</div>
