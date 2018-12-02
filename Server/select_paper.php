@@ -11,7 +11,7 @@ $pdo = new PDO($dsn, $user, $pass);
 #$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $query=$pdo->prepare("SELECT A.*, B.Score FROM images_l A, (SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-20*Variance) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1) B WHERE A.IllustID=B.IllustID");
-$query_demo=$pdo->prepare("SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-20*Variance) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1");
+$query_demo=$pdo->prepare("SELECT A.*, B.Score FROM images A, (SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-20*Variance) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1) B WHERE A.IllustID=B.IllustID");
 
 $ratio=$_POST["ar"];
 $demo=$_POST["demo"];
@@ -46,6 +46,10 @@ if(is_null($img_info)){
 	header("Content-type: image/".$format);
 	echo $res["Image"];
 }else{
-	echo $res["IllustID"];
+	header("Access-Control-Allow-Origin: *");
+	header("Access-Control-Allow-Methods: PUT, GET, POST");
+	header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+	$data_arr=array("IllustID" => $res["IllustID"]);
+	echo json_encode($data_arr);
 }
 ?>
