@@ -6,15 +6,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DemoComponent } from './demo/demo.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FaqComponent } from './faq/faq.component';
 
 const appRoutes: Routes = [
-  { path: 'demo', component: DemoComponent }
+  { path: 'demo', component: DemoComponent },
+  { path: 'faq', component: FaqComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    DemoComponent
+    DemoComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,
