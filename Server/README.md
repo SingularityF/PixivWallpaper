@@ -42,3 +42,5 @@ This server will handle the client requests and provide GUI for users.
 Scripts `paper_user.php`, `select_paper.php`, `pick_paper.php` are needed.
 
 Just set up the server as a web server that runs php and add database login information to `paper_user.php`.
+
+To provide GUI for users, you have to compile the angular project first, then copy the compiled files to where you want the URL to be. This application uses routing, so you may want to copy `.htaccess` file to where you placed the files if you're using apache. Also change the base-url to `./` in the compiled `index.html` if you're not using the root path.
