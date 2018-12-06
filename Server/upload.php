@@ -44,6 +44,10 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	$size=getimagesize($img_path);
 	$ratio=$size[0]/$size[1];
 
+	if(($size[0]+$size[1])>6000){
+		return 0;
+	}
+
 	if($type=="L"){
 		if($size[0]>2560||filesize($img_path)>8388608){
 			$im=load_img($img_path);
@@ -67,13 +71,13 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	if($type=="L"||$type=="O"){
 		$duplicate_query->execute(array($illustid));
 		if($duplicate_query->fetch()[0]!=0){
-			return;
+			return 0;
 		}
 
 	}else{
 		$duplicate_query->execute(array($md5));
 		if($duplicate_query->fetch()[0]!=0){
-			return;
+			return 0;
 		}
 	}
 	
@@ -102,22 +106,28 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	$query->bindParam(":illustid",$illustid);
 	
 	$query->execute();
+	return 1;
 }
 
 foreach($csv as $row){
 	if($row["Downloaded"]==1){
-		$img_path="images/".$row["Filename"];
-		$format=explode(".",$row["Filename"])[1];
 		$ranking=$row["Rank"];
 		$illustid=$row["IllustID"];
-		upload_img($img_path,$ranking,$illustid,$format,"D");
-		$img_path="images/".$row["Thumbnail"];
-		$format=explode(".",$row["Thumbnail"])[1];
-		upload_img($img_path,$ranking,$illustid,$format,"T");
+
 		$img_path="images/".$row["Original"];
 		$format=explode(".",$row["Original"])[1];
-		upload_img($img_path,$ranking,$illustid,$format,"L");
-	}
+		$status=upload_img($img_path,$ranking,$illustid,$format,"L");
+
+
+		$img_path="images/".$row["Filename"];
+		$format=explode(".",$row["Filename"])[1];
+		if($status==1)
+			upload_img($img_path,$ranking,$illustid,$format,"D");
+		$img_path="images/".$row["Thumbnail"];
+		$format=explode(".",$row["Thumbnail"])[1];
+		if($status==1)
+			upload_img($img_path,$ranking,$illustid,$format,"T");
+			}
 }
 
 echo "Insert successful";
