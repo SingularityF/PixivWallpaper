@@ -7,8 +7,10 @@ import { AppComponent } from './app.component';
 import { DemoComponent } from './demo/demo.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FaqComponent } from './faq/faq.component';
+import { FeaturesComponent } from './features/features.component';
 
 const appRoutes: Routes = [
+  { path: '', component: FeaturesComponent },
   { path: 'demo', component: DemoComponent },
   { path: 'faq', component: FaqComponent }
 ];
@@ -17,7 +19,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     DemoComponent,
-    FaqComponent
+    FaqComponent,
+    FeaturesComponent
   ],
   imports: [
     BrowserModule,
