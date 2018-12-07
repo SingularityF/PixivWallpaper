@@ -50,8 +50,9 @@ export class DemoComponent implements OnInit {
   }
 
   ngOnInit() {
+    document.getElementById("nav_demo").className += " active";
     this.aspectRatio = 16 / 9;
-    this.getSet()
+    this.getSet();
   }
 
 }

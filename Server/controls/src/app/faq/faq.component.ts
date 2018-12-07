@@ -10,6 +10,7 @@ export class FaqComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    document.getElementById("nav_faq").className += " active";
   }
 
 }
