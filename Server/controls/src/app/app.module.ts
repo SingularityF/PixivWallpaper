@@ -8,11 +8,13 @@ import { DemoComponent } from './demo/demo.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FaqComponent } from './faq/faq.component';
 import { FeaturesComponent } from './features/features.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 const appRoutes: Routes = [
   { path: '', component: FeaturesComponent },
   { path: 'demo', component: DemoComponent },
-  { path: 'faq', component: FaqComponent }
+  { path: 'faq', component: FaqComponent },
+  { path: 'ranking', component: RankingComponent }
 ];
 
 @NgModule({
@@ -20,7 +22,8 @@ const appRoutes: Routes = [
     AppComponent,
     DemoComponent,
     FaqComponent,
-    FeaturesComponent
+    FeaturesComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,

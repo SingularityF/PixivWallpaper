@@ -1,0 +1,15 @@
+<div class="container">
+  <h2 class="mt-5">Today's Illustrations from Pixiv daily rankings <a href="faq">(?)</a></h2>
+  <div class="row mb-5">
+    <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks;index as i">
+      <div><h6>#{{artwork.Ranking}}</h6></div>
+      <div>
+        <a [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID">
+          <img [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID" />
+        </a>
+        
+      </div>
+    </div>
+
+  </div>
+</div>
