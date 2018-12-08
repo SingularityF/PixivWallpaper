@@ -29,7 +29,11 @@ function normgrad($pixel1,$pixel2){
 	$g=trans($pixel1["green"]-$pixel2["green"]);
 	$b=trans($pixel1["blue"]-$pixel2["blue"]);
 	$norm=sqrt(pow($r,2)+pow($g,2)+pow($b,2));
-	return $norm;
+	# Penalize color patches
+	if( abs($r)<=2 && abs($g)<=2 && abs($b)<=2)
+		return -80;
+	else
+		return $norm;
 } 
 function load_img($img_path){
 	if(explode(".",$img_path)[1]=="jpg"){
