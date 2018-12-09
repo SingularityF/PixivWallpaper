@@ -31,9 +31,10 @@ function normgrad($pixel1,$pixel2){
 	$norm=sqrt(pow($r,2)+pow($g,2)+pow($b,2));
 	# Penalize color patches
 	if( abs($r)<=2 && abs($g)<=2 && abs($b)<=2)
-		return -80;
+		return -10;
 	else
-		return $norm;
+		#return $norm;
+		return 0;
 } 
 function load_img($img_path){
 	if(explode(".",$img_path)[1]=="jpg"){
