@@ -6,15 +6,21 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 dir_name="images"
-df_artworks=pd.DataFrame({"Rank":[],"IllustID":[],"Filename":[],"Thumbnail":[],"Original":[],"Downloaded":[]})
+df_artworks=pd.DataFrame({"Rank":[],"IllustID":[],"Filename":[],"Thumbnail":[],"Original":[],"Downloaded":[],"TimeStamp":[]})
 display=Display(visible=0,size=(800,600))
 display.start()
 
+# Disable images
+firefox_profile = FirefoxProfile()
+firefox_profile.set_preference('permissions.default.image', 2)
 #driver=webdriver.Chrome()
-driver=webdriver.Firefox()
+driver=webdriver.Firefox(firefox_profile)
 driver.get("https://www.pixiv.net/ranking.php?mode=daily&content=illust")
+page_title=driver.title
+timestamp=page_title.split(" ")[-1]
 
 def prepare_dir(dir_name):
     if not os.path.exists(dir_name):
@@ -94,7 +100,7 @@ for i,url in enumerate(medium_urls):
         downloaded=True
     except:
         downloaded=False
-        df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":"","Thumbnail":"","Original":"","Downloaded":downloaded},ignore_index=True)
+        df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":"","Thumbnail":"","Original":"","Downloaded":downloaded,"TimeStamp":timestamp},ignore_index=True)
         print("Unable to download image ranking {}".format(rank))
         continue
     output_name="{}_d".format(rank)
@@ -103,7 +109,7 @@ for i,url in enumerate(medium_urls):
     filename=download_image([large_img_url(img_url)],driver.get_cookies(),output_name,driver.current_url)
     thumbnail=download_image([thumb_img_url(img_url)],driver.get_cookies(),output_name_t,driver.current_url)
     original=download_image(orig_img_url(img_url),driver.get_cookies(),output_name_l,driver.current_url)
-    df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":filename,"Thumbnail":thumbnail,"Original":original,"Downloaded":downloaded},ignore_index=True)
+    df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":filename,"Thumbnail":thumbnail,"Original":original,"Downloaded":downloaded,"TimeStamp":timestamp},ignore_index=True)
 
 driver.quit()
 
