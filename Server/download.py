@@ -13,9 +13,13 @@ df_artworks=pd.DataFrame({"Rank":[],"IllustID":[],"Filename":[],"Thumbnail":[],"
 display=Display(visible=0,size=(800,600))
 display.start()
 
-# Disable images
 firefox_profile = FirefoxProfile()
+# Disable CSS
+firefox_profile.set_preference('permissions.default.stylesheet', 2)
+# Disable images
 firefox_profile.set_preference('permissions.default.image', 2)
+# Disable Flash
+firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 #driver=webdriver.Chrome()
 driver=webdriver.Firefox(firefox_profile)
 driver.get("https://www.pixiv.net/ranking.php?mode=daily&content=illust")
