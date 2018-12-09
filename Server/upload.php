@@ -24,17 +24,17 @@ $pdo = new PDO($dsn, $user, $pass);
 
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-function upload_img($img_path,$ranking,$illustid,$format,$type){
+function upload_img($img_path,$ranking,$illustid,$format,$type,$timestamp){
 	$pdo=$GLOBALS["pdo"];
 	if($type=="D"){
-		$query=$pdo->prepare("INSERT INTO images(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking)");
+		$query=$pdo->prepare("INSERT INTO images(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,TimeStamp) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:timestamp)");
 		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images WHERE Checksum=?");
 	}else if($type=="T"){
-		$query=$pdo->prepare("INSERT INTO images_t(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,AvgGradient,Variance) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:gradient,:variance)");
+		$query=$pdo->prepare("INSERT INTO images_t(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,AvgGradient,Variance,TimeStamp) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:gradient,:variance,:timestamp)");
 		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images_t WHERE Checksum=?");
 
 	}else if($type=="L"){
-		$query=$pdo->prepare("INSERT INTO images_l(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking)");
+		$query=$pdo->prepare("INSERT INTO images_l(Image,Width,Height,AspectRatio,Checksum,Format,Type,IllustID,Ranking,TimeStamp) VALUES(:img,:width,:height,:ratio,MD5(Image),:format,:type,:illustid,:ranking,:timestamp)");
 		$duplicate_query=$pdo->prepare("SELECT COUNT(*) FROM images_l WHERE IllustID=?");
 	}
 	
@@ -104,6 +104,7 @@ function upload_img($img_path,$ranking,$illustid,$format,$type){
 	# Artwork info
 	$query->bindParam(":ranking",$ranking);
 	$query->bindParam(":illustid",$illustid);
+	$query->bindParam(":timestamp",$timestamp);
 	
 	$query->execute();
 	return 1;
@@ -113,20 +114,21 @@ foreach($csv as $row){
 	if($row["Downloaded"]==1){
 		$ranking=$row["Rank"];
 		$illustid=$row["IllustID"];
+		$timestamp= date('Y-m-d', strtotime($row["TimeStamp"]));
 
 		$img_path="images/".$row["Original"];
 		$format=explode(".",$row["Original"])[1];
-		$status=upload_img($img_path,$ranking,$illustid,$format,"L");
+		$status=upload_img($img_path,$ranking,$illustid,$format,"L",$timestamp);
 
 
 		$img_path="images/".$row["Filename"];
 		$format=explode(".",$row["Filename"])[1];
 		if($status==1)
-			upload_img($img_path,$ranking,$illustid,$format,"D");
+			upload_img($img_path,$ranking,$illustid,$format,"D",$timestamp);
 		$img_path="images/".$row["Thumbnail"];
 		$format=explode(".",$row["Thumbnail"])[1];
 		if($status==1)
-			upload_img($img_path,$ranking,$illustid,$format,"T");
+			upload_img($img_path,$ranking,$illustid,$format,"T",$timestamp);
 			}
 }
 
