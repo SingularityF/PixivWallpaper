@@ -1,6 +1,7 @@
 from pyvirtualdisplay import Display
 import pandas as pd
 import os
+import sys
 import glob
 import requests
 from selenium import webdriver
@@ -8,6 +9,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
+#####
+# Initial configurations
+#####
+print("Initializing...")
 dir_name="images"
 df_artworks=pd.DataFrame({"Rank":[],"IllustID":[],"Filename":[],"Thumbnail":[],"Original":[],"Downloaded":[],"TimeStamp":[]})
 display=Display(visible=0,size=(800,600))
@@ -22,9 +27,8 @@ firefox_profile.set_preference('permissions.default.image', 2)
 firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 #driver=webdriver.Chrome()
 driver=webdriver.Firefox(firefox_profile)
-driver.get("https://www.pixiv.net/ranking.php?mode=daily&content=illust")
-page_title=driver.title
-timestamp=page_title.split(" ")[-1]
+driver.set_page_load_timeout(90)
+max_retries=3
 
 def prepare_dir(dir_name):
     if not os.path.exists(dir_name):
@@ -75,7 +79,11 @@ def download_image(urls,all_cookies,img_name,referer):
     for s_cookie in all_cookies:
         cookies[s_cookie["name"]]=s_cookie["value"]
     for url in urls:
-        response=requests.get(url,cookies=cookies,headers=headers)
+        try:
+            response=requests.get(url,cookies=cookies,headers=headers,timeout=120)
+        except:
+            print("Failed to download image {} because conection timed out".format(img_name))
+            return ""
         ext=url.split(".")[-1]
         if response.status_code!=404:
             break
@@ -84,8 +92,29 @@ def download_image(urls,all_cookies,img_name,referer):
         f.write(response.content)
     return output_name
 
+def load_and_retry(driver,url,retries):
+    for i in range(retries):
+        try:
+            driver.get(url)
+        except:
+            print("Connection timed out, trying again...")
+            continue
+        return
+    print("Connection timeout reached max retries, exiting...")
+    sys.exit(1)
+
+#####
+# Main procedures starts here
+#####
 prepare_dir(dir_name)
-  
+
+print("Loading Pixiv daily rankings")
+load_and_retry(driver,"https://www.pixiv.net/ranking.php?mode=daily&content=illust",max_retries)
+
+page_title=driver.title
+timestamp=page_title.split(" ")[-1]
+print("Rankings loaded")
+ 
 medium_urls=[]
 illust_ids=[]
 artworks=driver.find_elements_by_class_name("ranking-item")
@@ -95,21 +124,22 @@ for artwork in artworks:
     medium_urls.append(artwork.find_element_by_class_name("_work").get_attribute("href"))
 
 for i,url in enumerate(medium_urls):
-    driver.get(url)
     illustid=illust_ids[i]
     rank=i+1
-    print("Downloading image ranking {}".format(rank))
+    print("\nAnalyzing links of image ranking {}".format(rank))
+    load_and_retry(driver,url,max_retries)
     try:
         img_url=driver.find_element_by_class_name("_work").find_element_by_tag_name("img").get_attribute("src")
         downloaded=True
     except:
         downloaded=False
         df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":"","Thumbnail":"","Original":"","Downloaded":downloaded,"TimeStamp":timestamp},ignore_index=True)
-        print("Unable to download image ranking {}".format(rank))
+        print("Unable to download image ranking {} because of adult content".format(rank))
         continue
     output_name="{}_d".format(rank)
     output_name_t="{}_t".format(rank)
     output_name_l="{}_l".format(rank)
+    print("Downloading image ranking {}".format(rank))
     filename=download_image([large_img_url(img_url)],driver.get_cookies(),output_name,driver.current_url)
     thumbnail=download_image([thumb_img_url(img_url)],driver.get_cookies(),output_name_t,driver.current_url)
     original=download_image(orig_img_url(img_url),driver.get_cookies(),output_name_l,driver.current_url)
