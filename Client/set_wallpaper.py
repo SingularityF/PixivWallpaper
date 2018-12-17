@@ -11,6 +11,20 @@ version="1.2.1"
 
 url="https://singf.space/pixiv/select_paper.php"
 
+download_url="https://github.com/SingularityF/PixivWallpaper/releases/latest"
+
+def check_update():
+    try:
+        r = requests.get(download_url)
+    except:
+        return (1,"")
+    download_version=r.url.split("/")[-1]
+    if download_version==version:
+        return (0,"latest")
+    else:
+        return (0,"obsolete")
+
+
 def pnf(msg):
     print(msg)
     sys.stdout.flush()
@@ -54,9 +68,21 @@ def download_and_set(enlarge=False):
     set_wallpaper(path)
     return (0,output_file)
 
+def raise_connection_err():
+    pnf("Download failed, check your internet connection")
+    input("Press any key to quit...")
+    quit()
+
 if __name__ == "__main__":
+    pnf("Checking client version...")
+    status,msg=check_update()
+    if status==1:
+        raise_connection_err()
+    else:
+        if msg=="latest":
+            pnf("Client up to date")
+        else:
+            pnf("New version available!")
     status,_=download_and_set()
     if status==1:
-        pnf("Download failed, check your internet connection")
-        input("Press any key to quit...")
-        quit()
+        raise_connection_err()
