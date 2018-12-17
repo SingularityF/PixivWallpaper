@@ -4,7 +4,7 @@ You can split the application into multiple parts handled by different servers o
 
 ## Configure the database server
 
-Use the `pixiv_db_schema.sql` file as a guide to create a new database. The RDBMS I'm using is MariaDB(MySQL). You should create two users, one has SELECT and INSERT privilege while the other has SELECT privilege, used by `upload_user.php` and `paper_user.php` respectively.
+Use the `pixiv_db_schema.sql` file as a guide to create a new database. The RDBMS I'm using is MariaDB(MySQL). You should create two users, the two should have SELECT and INSERT privilege, used by `upload_user.php` and `paper_user.php` respectively.
 
 ## Configure the data processing server
 
