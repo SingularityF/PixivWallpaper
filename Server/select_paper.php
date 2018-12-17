@@ -15,6 +15,8 @@ $query_demo=$pdo->prepare("SELECT A.*, B.Score FROM images A, (SELECT *,(AvgGrad
 $query_thumb=$pdo->prepare("SELECT Image FROM images_t WHERE IllustID=?");
 
 $ratio=$_POST["ar"];
+$mac=$_POST["uuid"];
+$version=$_POST["version"];
 
 $demo=$_GET["demo"];
 $ratio_g=$_GET["ar"];
@@ -23,7 +25,10 @@ $img_info=$_GET["info"];
 $thumb=$_GET["thumb"];
 $illustID=$_GET["id"];
 
+$ip_addr = isset($_SERVER['HTTP_CLIENT_IP'])?$_SERVER['HTTP_CLIENT_IP']:isset($_SERVER['HTTP_X_FORWARDED_FOR'])?$_SERVER['HTTP_X_FORWARDED_FOR']:$_SERVER['REMOTE_ADDR'];
+
 if(!is_null($thumb)){
+# Thumbnail mode
 	if(is_null($illustID)){
     		die("Not enough parameters");
 	}
@@ -32,6 +37,7 @@ if(!is_null($thumb)){
 	header("Content-type: image/jpg");
 	echo $res["Image"];
 }else if(!is_null($demo)){
+# Demo mode (1200 resolution)
 	if(is_null($ratio_g)){
     		die("Not enough parameters");
 	}
@@ -52,7 +58,15 @@ if(!is_null($thumb)){
 	if(is_null($ratio)){
     		die("Not enough parameters");
 	}
+# Client query mode
 	$query->execute(array($ratio));
+        $query_log=$pdo->prepare("INSERT INTO log_set_wallpaper(MacAddr,IPAddr,ClientVersion) VALUES(:macaddr,:ipaddr,:version)");
+	$query_log->bindParam(":macaddr",$mac);
+	$query_log->bindParam(":ipaddr",$ip_addr);
+	$query_log->bindParam(":version",$version);
+
+        $query_log->execute();
+
 	$res=$query->fetch(PDO::FETCH_ASSOC);
 	$format=$res["Format"];
 
