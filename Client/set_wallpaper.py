@@ -6,6 +6,9 @@ import tkinter
 from subprocess import call
 from uuid import getnode
 
+## Change this each time during compilation
+version="1.2.1"
+
 url="https://singf.space/pixiv/select_paper.php"
 
 def pnf(msg):
@@ -28,7 +31,7 @@ def download_and_set(enlarge=False):
     uuid=str(getnode())
     try:
         r = requests.post(url, data = {"ar":float(width)/float(height),
-            "uuid":uuid})
+            "uuid":uuid,"version":version})
     except:
         return (1,"")
             
