@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 09, 2018 at 02:13 AM
--- Server version: 10.1.36-MariaDB-cll-lve
+-- Generation Time: Dec 17, 2018 at 01:52 AM
+-- Server version: 10.2.18-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -41,7 +41,7 @@ CREATE TABLE `images` (
   `AvgGradient` float DEFAULT NULL COMMENT 'Average horizontal gradient in 2 norm',
   `Variance` float DEFAULT NULL,
   `Format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DateCreated` datetime NOT NULL DEFAULT current_timestamp(),
   `TimeStamp` date DEFAULT NULL,
   `Type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Original/Large/Displayed/Thumbnail',
   `IllustID` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=',
@@ -65,7 +65,7 @@ CREATE TABLE `images_l` (
   `AvgGradient` float DEFAULT NULL COMMENT 'Average horizontal gradient in 2 norm',
   `Variance` float DEFAULT NULL,
   `Format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DateCreated` datetime NOT NULL DEFAULT current_timestamp(),
   `TimeStamp` date DEFAULT NULL,
   `Type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Original/Large/Displayed/Thumbnail',
   `IllustID` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=',
@@ -89,11 +89,25 @@ CREATE TABLE `images_t` (
   `AvgGradient` float DEFAULT NULL COMMENT 'Average horizontal gradient in 2 norm',
   `Variance` float DEFAULT NULL,
   `Format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DateCreated` datetime NOT NULL DEFAULT current_timestamp(),
   `TimeStamp` date DEFAULT NULL,
   `Type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Original/Large/Displayed/Thumbnail',
   `IllustID` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=',
   `Ranking` int(11) NOT NULL COMMENT 'Ranking when created'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log_set_wallpaper`
+--
+
+CREATE TABLE `log_set_wallpaper` (
+  `EntryID` int(10) UNSIGNED NOT NULL,
+  `MacAddr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `IPAddr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `ClientVersion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'NULL => version<=v1.2'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -152,7 +166,7 @@ CREATE TABLE `todays_best` (
 --
 DROP TABLE IF EXISTS `score_16x9`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `score_16x9`  AS  select `todays_best`.`ImageID` AS `ImageID`,`todays_best`.`Image` AS `Image`,`todays_best`.`Width` AS `Width`,`todays_best`.`Height` AS `Height`,`todays_best`.`AspectRatio` AS `AspectRatio`,`todays_best`.`Checksum` AS `Checksum`,`todays_best`.`Entropy` AS `Entropy`,`todays_best`.`AvgGradient` AS `AvgGradient`,`todays_best`.`Variance` AS `Variance`,`todays_best`.`Format` AS `Format`,`todays_best`.`DateCreated` AS `DateCreated`,`todays_best`.`TimeStamp` AS `TimeStamp`,`todays_best`.`Type` AS `Type`,`todays_best`.`IllustID` AS `IllustID`,`todays_best`.`Ranking` AS `Ranking`,((`todays_best`.`AvgGradient` - pow((7 * abs((`todays_best`.`AspectRatio` - (16 / 9)))),2)) - pow((10 * `todays_best`.`Variance`),2)) AS `Score` from `todays_best` order by ((`todays_best`.`AvgGradient` - pow((7 * abs((`todays_best`.`AspectRatio` - (16 / 9)))),2)) - pow((10 * `todays_best`.`Variance`),2)) desc ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `score_16x9`  AS  select `todays_best`.`ImageID` AS `ImageID`,`todays_best`.`Image` AS `Image`,`todays_best`.`Width` AS `Width`,`todays_best`.`Height` AS `Height`,`todays_best`.`AspectRatio` AS `AspectRatio`,`todays_best`.`Checksum` AS `Checksum`,`todays_best`.`Entropy` AS `Entropy`,`todays_best`.`AvgGradient` AS `AvgGradient`,`todays_best`.`Variance` AS `Variance`,`todays_best`.`Format` AS `Format`,`todays_best`.`DateCreated` AS `DateCreated`,`todays_best`.`TimeStamp` AS `TimeStamp`,`todays_best`.`Type` AS `Type`,`todays_best`.`IllustID` AS `IllustID`,`todays_best`.`Ranking` AS `Ranking`,`todays_best`.`AvgGradient` - pow(7 * abs(`todays_best`.`AspectRatio` - 16 / 9),2) - pow(10 * `todays_best`.`Variance`,2) AS `Score` from `todays_best` order by `todays_best`.`AvgGradient` - pow(7 * abs(`todays_best`.`AspectRatio` - 16 / 9),2) - pow(10 * `todays_best`.`Variance`,2) desc ;
 
 -- --------------------------------------------------------
 
@@ -161,7 +175,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER V
 --
 DROP TABLE IF EXISTS `todays_best`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_best`  AS  select `images_t`.`ImageID` AS `ImageID`,`images_t`.`Image` AS `Image`,`images_t`.`Width` AS `Width`,`images_t`.`Height` AS `Height`,`images_t`.`AspectRatio` AS `AspectRatio`,`images_t`.`Checksum` AS `Checksum`,`images_t`.`Entropy` AS `Entropy`,`images_t`.`AvgGradient` AS `AvgGradient`,`images_t`.`Variance` AS `Variance`,`images_t`.`Format` AS `Format`,`images_t`.`DateCreated` AS `DateCreated`,`images_t`.`TimeStamp` AS `TimeStamp`,`images_t`.`Type` AS `Type`,`images_t`.`IllustID` AS `IllustID`,`images_t`.`Ranking` AS `Ranking` from `images_t` where (`images_t`.`TimeStamp` = (select max(`images_t`.`TimeStamp`) from `images_t`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_best`  AS  select `images_t`.`ImageID` AS `ImageID`,`images_t`.`Image` AS `Image`,`images_t`.`Width` AS `Width`,`images_t`.`Height` AS `Height`,`images_t`.`AspectRatio` AS `AspectRatio`,`images_t`.`Checksum` AS `Checksum`,`images_t`.`Entropy` AS `Entropy`,`images_t`.`AvgGradient` AS `AvgGradient`,`images_t`.`Variance` AS `Variance`,`images_t`.`Format` AS `Format`,`images_t`.`DateCreated` AS `DateCreated`,`images_t`.`TimeStamp` AS `TimeStamp`,`images_t`.`Type` AS `Type`,`images_t`.`IllustID` AS `IllustID`,`images_t`.`Ranking` AS `Ranking` from `images_t` where `images_t`.`TimeStamp` = (select max(`images_t`.`TimeStamp`) from `images_t`) ;
 
 --
 -- Indexes for dumped tables
@@ -189,6 +203,12 @@ ALTER TABLE `images_t`
   ADD UNIQUE KEY `IllustID` (`IllustID`);
 
 --
+-- Indexes for table `log_set_wallpaper`
+--
+ALTER TABLE `log_set_wallpaper`
+  ADD PRIMARY KEY (`EntryID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -196,19 +216,25 @@ ALTER TABLE `images_t`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1204;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1398;
 
 --
 -- AUTO_INCREMENT for table `images_l`
 --
 ALTER TABLE `images_l`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=545;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=739;
 
 --
 -- AUTO_INCREMENT for table `images_t`
 --
 ALTER TABLE `images_t`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=513;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=707;
+
+--
+-- AUTO_INCREMENT for table `log_set_wallpaper`
+--
+ALTER TABLE `log_set_wallpaper`
+  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
