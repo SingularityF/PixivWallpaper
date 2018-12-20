@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 17, 2018 at 01:52 AM
--- Server version: 10.2.18-MariaDB-cll-lve
+-- Generation Time: Dec 19, 2018 at 10:16 PM
+-- Server version: 10.2.19-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -162,6 +162,34 @@ CREATE TABLE `todays_best` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `todays_pick`
+-- (See below for the actual view)
+--
+CREATE TABLE `todays_pick` (
+`EntryID` int(10) unsigned
+,`MacAddr` varchar(255)
+,`SelectedIllust` int(11)
+,`DateCreated` datetime
+,`TimeStamp` date
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_selection`
+--
+
+CREATE TABLE `user_selection` (
+  `EntryID` int(10) UNSIGNED NOT NULL,
+  `MacAddr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `SelectedIllust` int(11) NOT NULL,
+  `DateCreated` datetime NOT NULL DEFAULT current_timestamp(),
+  `TimeStamp` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `score_16x9`
 --
 DROP TABLE IF EXISTS `score_16x9`;
@@ -176,6 +204,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER V
 DROP TABLE IF EXISTS `todays_best`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_best`  AS  select `images_t`.`ImageID` AS `ImageID`,`images_t`.`Image` AS `Image`,`images_t`.`Width` AS `Width`,`images_t`.`Height` AS `Height`,`images_t`.`AspectRatio` AS `AspectRatio`,`images_t`.`Checksum` AS `Checksum`,`images_t`.`Entropy` AS `Entropy`,`images_t`.`AvgGradient` AS `AvgGradient`,`images_t`.`Variance` AS `Variance`,`images_t`.`Format` AS `Format`,`images_t`.`DateCreated` AS `DateCreated`,`images_t`.`TimeStamp` AS `TimeStamp`,`images_t`.`Type` AS `Type`,`images_t`.`IllustID` AS `IllustID`,`images_t`.`Ranking` AS `Ranking` from `images_t` where `images_t`.`TimeStamp` = (select max(`images_t`.`TimeStamp`) from `images_t`) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `todays_pick`
+--
+DROP TABLE IF EXISTS `todays_pick`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_pick`  AS  select `user_selection`.`EntryID` AS `EntryID`,`user_selection`.`MacAddr` AS `MacAddr`,`user_selection`.`SelectedIllust` AS `SelectedIllust`,`user_selection`.`DateCreated` AS `DateCreated`,`user_selection`.`TimeStamp` AS `TimeStamp` from `user_selection` where `user_selection`.`TimeStamp` = (select max(`images`.`TimeStamp`) from `images`) ;
 
 --
 -- Indexes for dumped tables
@@ -209,6 +246,12 @@ ALTER TABLE `log_set_wallpaper`
   ADD PRIMARY KEY (`EntryID`);
 
 --
+-- Indexes for table `user_selection`
+--
+ALTER TABLE `user_selection`
+  ADD PRIMARY KEY (`EntryID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -216,25 +259,31 @@ ALTER TABLE `log_set_wallpaper`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1398;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1453;
 
 --
 -- AUTO_INCREMENT for table `images_l`
 --
 ALTER TABLE `images_l`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=739;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=794;
 
 --
 -- AUTO_INCREMENT for table `images_t`
 --
 ALTER TABLE `images_t`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=707;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=762;
 
 --
 -- AUTO_INCREMENT for table `log_set_wallpaper`
 --
 ALTER TABLE `log_set_wallpaper`
-  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `user_selection`
+--
+ALTER TABLE `user_selection`
+  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
