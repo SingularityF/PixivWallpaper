@@ -11,6 +11,18 @@ $pdo = new PDO($dsn, $user, $pass);
 #$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $query=$pdo->prepare("SELECT A.*, B.Score FROM images_l A, (SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-POW(10*Variance,2)) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1) B WHERE A.IllustID=B.IllustID");
+$query_selection=$pdo->prepare("
+SELECT IllustID FROM todays_best
+WHERE IllustID=
+(SELECT SelectedIllust FROM user_selection
+WHERE MacAddr=?
+ORDER BY DateCreated DESC
+LIMIT 1)
+");
+$query_pinpoint=$pdo->prepare("
+SELECT * FROM images_l
+WHERE IllustID=?
+");
 $query_demo=$pdo->prepare("SELECT A.*, B.Score FROM images A, (SELECT *,(AvgGradient-POW(7*ABS(AspectRatio-?),2)-POW(10*Variance,2)) AS Score FROM todays_best ORDER BY Score DESC LIMIT 1) B WHERE A.IllustID=B.IllustID");
 $query_thumb=$pdo->prepare("SELECT Image FROM images_t WHERE IllustID=?");
 
@@ -59,7 +71,15 @@ if(!is_null($thumb)){
     		die("Not enough parameters");
 	}
 # Client query mode
-	$query->execute(array($ratio));
+	$query_selection->execute(array($mac));
+	if($res=$query_selection->fetch(PDO::FETCH_ASSOC)){
+		$selected_id=$res["IllustID"];
+		$query_pinpoint->execute(array($selected_id));
+		$res=$query_pinpoint->fetch(PDO::FETCH_ASSOC);
+	}else{
+		$query->execute(array($ratio));
+		$res=$query->fetch(PDO::FETCH_ASSOC);
+	}
         $query_log=$pdo->prepare("INSERT INTO log_set_wallpaper(MacAddr,IPAddr,ClientVersion) VALUES(:macaddr,:ipaddr,:version)");
 	$query_log->bindParam(":macaddr",$mac);
 	$query_log->bindParam(":ipaddr",$ip_addr);
@@ -67,7 +87,6 @@ if(!is_null($thumb)){
 
         $query_log->execute();
 
-	$res=$query->fetch(PDO::FETCH_ASSOC);
 	$format=$res["Format"];
 
 	header("Content-type: image/".$format);
