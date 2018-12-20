@@ -8,6 +8,10 @@ import threading
 
 url="https://singf.space/pixiv/controls/ranking"
 
+def launch_picker():
+    uuid=str(getnode())
+    webbrowser.open("{}/{}".format(url,uuid))
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -64,13 +68,13 @@ class Application(tk.Frame):
         self.get_btn.grid(row=0,padx=10,pady=10)
         self.enlarge_btn=tk.Button(self,text="Enlarge wallpaper",command=start_enlarge_paper_thread)
         self.enlarge_btn.grid(row=1,padx=10,pady=10)
-        #self.pick_btn=tk.Button(self,text="Pick wallpaper")
-        #self.pick_btn.grid(row=2,padx=10,pady=10)
+        self.pick_btn=tk.Button(self,text="Pick wallpaper",command=launch_picker)
+        self.pick_btn.grid(row=2,padx=10,pady=10)
         self.update_btn=tk.Button(self,text="Check update",command=start_update_thread)
         self.update_btn.grid(row=3,padx=10,pady=10)
 
-        self.output_text=tk.Text(self,width=50,height=25)
-        self.output_text.grid(row=4,padx=10)
+        self.output_text=tk.Text(self,width=62,height=25)
+        self.output_text.grid(row=4)
     
     def print_log(self,msg):
         self.output_text.insert("1.0",msg+"\n")
@@ -80,12 +84,3 @@ if __name__=="__main__":
     root=tk.Tk()
     app=Application(master=root)
     app.mainloop()
-
-#uuid=str(getnode())
-# Prevent trying random uuid, ensure the validity of uuid
-# validate=hashlib.md5(uuid.encode("ascii")) 
-
-
-# Request token from server
-
-#webbrowser.open("{}?uuid={}&valid={}".format(url,uuid,validate.hexdigest()[:10]))
