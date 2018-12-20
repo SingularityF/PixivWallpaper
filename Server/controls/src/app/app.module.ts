@@ -14,7 +14,8 @@ const appRoutes: Routes = [
   { path: '', component: FeaturesComponent },
   { path: 'demo', component: DemoComponent },
   { path: 'faq', component: FaqComponent },
-  { path: 'ranking', component: RankingComponent }
+  { path: 'ranking/:uuid', component: RankingComponent },
+  { path: 'ranking', component: RankingComponent },
 ];
 
 @NgModule({

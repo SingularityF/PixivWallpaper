@@ -1,15 +1,56 @@
+<ng-template #requestModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Setting wallpaper...</h4>
+  </div>
+  <div class="modal-body text-center">
+    <div class="loader m-auto" *ngIf="requestPending"></div>
+    <div>{{modalMessage}}</div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">OK</button>
+  </div>
+</ng-template>
+
 <div class="container">
   <h2 class="mt-5">Today's Illustrations from Pixiv daily rankings <a href="faq">(?)</a></h2>
-  <div class="row mb-5">
+  <div class="alert alert-warning" *ngIf="!selectMode">
+    You're now in preview mode, download the application to select from the wallpapers below.<br>
+    If you have downloaded the app, run <b>pixivwallpaper_gui.exe</b> and press pick wallpaper.
+  </div>
+  <div class="alert alert-warning" *ngIf="selectMode">
+    Pick any of the illustrations below, and click <b>Set as wallpaper</b>, then get wallpaper from your desktop client
+    again to see the change.
+  </div>
+
+  <div class="row mb-5" *ngIf="!selectMode">
     <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks;index as i">
-      <div><h6>#{{artwork.Ranking}}</h6></div>
+      <div>
+        <h6>#{{artwork.Ranking}}</h6>
+      </div>
       <div>
         <a [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID">
           <img [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID" />
         </a>
-        
       </div>
     </div>
+  </div>
 
+  <div class="row mb-5" *ngIf="selectMode">
+    <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks; let i = index">
+      <div>
+        <h6>#{{artwork.Ranking}}</h6>
+      </div>
+      <div>
+        <img style="cursor:pointer" [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID"
+          (click)="selectedRank=artwork.Ranking" />
+        <div *ngIf="selectedRank==artwork.Ranking">
+          <a [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID"><button class="btn btn-secondary m-1">View
+              image on Pixiv</button></a>
+          <button class="btn btn-primary m-1" (click)="open(requestModal);setWallpaper(artwork.IllustID,artwork.TimeStamp)">Set
+            as
+            wallpaper</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
