@@ -7,7 +7,7 @@ from subprocess import call
 from uuid import getnode
 
 ## Change this each time during compilation
-version="1.2.1"
+version="1.2.5"
 
 url="https://singf.space/pixiv/select_paper.php"
 
