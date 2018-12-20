@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RankingService {
   requestUrl = "https://singf.space/pixiv/ranking_gallery.php";
+  
   constructor(private http: HttpClient) { }
 
   public fetchGallery() {
