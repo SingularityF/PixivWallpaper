@@ -23,12 +23,12 @@
   </div>
 
   <div class="row mb-5" *ngIf="!selectMode">
-    <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks;index as i">
+    <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks; let i = index">
       <div>
         <h6>#{{artwork.Ranking}}</h6>
       </div>
       <div>
-        <a [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID">
+        <a target="_blank" [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID">
           <img [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID" />
         </a>
       </div>
@@ -44,7 +44,7 @@
         <img style="cursor:pointer" [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID"
           (click)="selectedRank=artwork.Ranking" />
         <div *ngIf="selectedRank==artwork.Ranking">
-          <a [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID"><button class="btn btn-secondary m-1">View
+          <a target="_blank" [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID"><button class="btn btn-secondary m-1">View
               image on Pixiv</button></a>
           <button class="btn btn-primary m-1" (click)="open(requestModal);setWallpaper(artwork.IllustID,artwork.TimeStamp)">Set
             as
