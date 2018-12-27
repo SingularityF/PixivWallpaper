@@ -24,33 +24,36 @@
 
   <div class="row mb-5" *ngIf="!selectMode">
     <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks; let i = index">
-      <div>
-        <h6>#{{artwork.Ranking}}</h6>
-      </div>
+      <h5>
+        <div class="badge badge-secondary">#{{artwork.Ranking}}</div>
+      </h5>
       <div>
         <a target="_blank" [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID">
           <img [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID" />
         </a>
       </div>
+      <div class="badge badge-pill badge-info">{{artwork.OrigWidth}} x {{artwork.OrigHeight}}</div>
     </div>
   </div>
 
   <div class="row mb-5" *ngIf="selectMode">
     <div class="col-md-4 mt-4 text-center" *ngFor="let artwork of artworks; let i = index">
-      <div>
-        <h6>#{{artwork.Ranking}}</h6>
-      </div>
+      <h5>
+        <div class="badge badge-secondary">#{{artwork.Ranking}}</div>
+      </h5>
       <div>
         <img style="cursor:pointer" [src]="'https://singf.space/pixiv/select_paper.php?thumb=YES&id='+artwork.IllustID"
           (click)="selectedRank=artwork.Ranking" />
         <div *ngIf="selectedRank==artwork.Ranking">
-          <a target="_blank" [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID"><button class="btn btn-secondary m-1">View
+          <a target="_blank" [href]="'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+artwork.IllustID"><button
+              class="btn btn-secondary m-1">View
               image on Pixiv</button></a>
           <button class="btn btn-primary m-1" (click)="open(requestModal);setWallpaper(artwork.IllustID,artwork.TimeStamp)">Set
             as
             wallpaper</button>
         </div>
       </div>
+      <div class="badge badge-pill badge-info">{{artwork.OrigWidth}} x {{artwork.OrigHeight}}</div>
     </div>
   </div>
 </div>
