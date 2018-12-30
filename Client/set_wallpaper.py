@@ -3,8 +3,10 @@ import os
 import sys
 import win32api, win32con, win32gui
 import tkinter
+import hashlib
 from subprocess import call
 from uuid import getnode
+from pathlib import Path
 
 ## Change this each time during compilation
 version="1.2.5"
@@ -40,7 +42,20 @@ def download_and_set(enlarge=False):
     width = root.winfo_screenwidth()
     height = root.winfo_screenheight()
     root.destroy()
-    
+
+    local_md5=[None,None]
+    # Calculate MD5
+    path_jpg=Path("wallpaper.jpg")
+    path_png=Path("wallpaper.png")
+
+    if path_jpg.exists():
+        with open("wallpaper.jpg","rb") as f:
+            local_md5[0]=hashlib.md5(f.read()).hexdigest()
+
+    if path_png.exists():
+        with open("wallpaper.png","rb") as f:
+            local_md5[1]=hashlib.md5(f.read()).hexdigest()
+
     pnf("Fetching wallpaper...")
     uuid=str(getnode())
     try:
@@ -52,6 +67,16 @@ def download_and_set(enlarge=False):
     ext=r.headers["Content-Type"].split("/")[1]
     output_file="wallpaper.{}".format(ext)
     
+    if hashlib.md5(r.content).hexdigest() in local_md5:
+        pnf("No new wallpaper found")
+        quit()
+    
+    # Removing old images and writing new image
+    if path_jpg.exists():
+        os.remove("wallpaper.jpg")
+    if path_png.exists():
+        os.remove("wallpaper.png")
+
     with open(output_file,"wb") as f:
         f.write(r.content)
 
