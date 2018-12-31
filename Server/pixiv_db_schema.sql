@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 19, 2018 at 10:16 PM
+-- Generation Time: Dec 31, 2018 at 03:47 PM
 -- Server version: 10.2.19-MariaDB-cll-lve
 -- PHP Version: 5.6.30
 
@@ -157,6 +157,8 @@ CREATE TABLE `todays_best` (
 ,`Type` varchar(32)
 ,`IllustID` varchar(32)
 ,`Ranking` int(11)
+,`OrigWidth` int(10) unsigned
+,`OrigHeight` int(10) unsigned
 );
 
 -- --------------------------------------------------------
@@ -203,7 +205,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER V
 --
 DROP TABLE IF EXISTS `todays_best`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_best`  AS  select `images_t`.`ImageID` AS `ImageID`,`images_t`.`Image` AS `Image`,`images_t`.`Width` AS `Width`,`images_t`.`Height` AS `Height`,`images_t`.`AspectRatio` AS `AspectRatio`,`images_t`.`Checksum` AS `Checksum`,`images_t`.`Entropy` AS `Entropy`,`images_t`.`AvgGradient` AS `AvgGradient`,`images_t`.`Variance` AS `Variance`,`images_t`.`Format` AS `Format`,`images_t`.`DateCreated` AS `DateCreated`,`images_t`.`TimeStamp` AS `TimeStamp`,`images_t`.`Type` AS `Type`,`images_t`.`IllustID` AS `IllustID`,`images_t`.`Ranking` AS `Ranking` from `images_t` where `images_t`.`TimeStamp` = (select max(`images_t`.`TimeStamp`) from `images_t`) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`singula5`@`localhost` SQL SECURITY DEFINER VIEW `todays_best`  AS  select `images_t`.`ImageID` AS `ImageID`,`images_t`.`Image` AS `Image`,`images_t`.`Width` AS `Width`,`images_t`.`Height` AS `Height`,`images_t`.`AspectRatio` AS `AspectRatio`,`images_t`.`Checksum` AS `Checksum`,`images_t`.`Entropy` AS `Entropy`,`images_t`.`AvgGradient` AS `AvgGradient`,`images_t`.`Variance` AS `Variance`,`images_t`.`Format` AS `Format`,`images_t`.`DateCreated` AS `DateCreated`,`images_t`.`TimeStamp` AS `TimeStamp`,`images_t`.`Type` AS `Type`,`images_t`.`IllustID` AS `IllustID`,`images_t`.`Ranking` AS `Ranking`,`images_l`.`Width` AS `OrigWidth`,`images_l`.`Height` AS `OrigHeight` from (`images_t` left join `images_l` on(`images_t`.`IllustID` = `images_l`.`IllustID`)) where `images_t`.`TimeStamp` = (select max(`images_t`.`TimeStamp`) from `images_t`) ;
 
 -- --------------------------------------------------------
 
@@ -259,31 +261,31 @@ ALTER TABLE `user_selection`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1453;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1771;
 
 --
 -- AUTO_INCREMENT for table `images_l`
 --
 ALTER TABLE `images_l`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=794;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1112;
 
 --
 -- AUTO_INCREMENT for table `images_t`
 --
 ALTER TABLE `images_t`
-  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=762;
+  MODIFY `ImageID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1080;
 
 --
 -- AUTO_INCREMENT for table `log_set_wallpaper`
 --
 ALTER TABLE `log_set_wallpaper`
-  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT for table `user_selection`
 --
 ALTER TABLE `user_selection`
-  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `EntryID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
