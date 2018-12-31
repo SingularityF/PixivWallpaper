@@ -9,7 +9,7 @@ from uuid import getnode
 from pathlib import Path
 
 ## Change this each time during compilation
-version="1.2.5"
+version="1.3"
 
 url="https://singf.space/pixiv/select_paper.php"
 
@@ -67,9 +67,9 @@ def download_and_set(enlarge=False):
     ext=r.headers["Content-Type"].split("/")[1]
     output_file="wallpaper.{}".format(ext)
     
-    if hashlib.md5(r.content).hexdigest() in local_md5:
+    if hashlib.md5(r.content).hexdigest() in local_md5 and enlarge==False:
         pnf("No new wallpaper found")
-        quit()
+        return(0,"304")
     
     # Removing old images and writing new image
     if path_jpg.exists():
@@ -96,7 +96,7 @@ def download_and_set(enlarge=False):
 def raise_connection_err():
     pnf("Download failed, check your internet connection")
     input("Press any key to quit...")
-    quit()
+    sys.exit()
 
 if __name__ == "__main__":
     pnf("Checking client version...")
