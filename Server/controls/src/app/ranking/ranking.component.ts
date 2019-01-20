@@ -76,4 +76,6 @@ interface returnData {
   IllustID: string;
   Ranking: string;
   TimeStamp: string;
+  OrigWidth: string;
+  OrigHeight: string;
 }

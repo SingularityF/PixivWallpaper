@@ -16,7 +16,9 @@ Pixivのイラストデイリーランキングから一番いいのを壁紙に
 
 Find out the best wallpaper from today's Pixiv daily rankings recommended by our application with our [demo](https://singf.space/pixiv/controls/demo) here!
 
-## Description
+## Description & Features
+
+Explore the features offered by the application with our [web user interface](http://singf.space/pixiv/controls).
 
 This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
 

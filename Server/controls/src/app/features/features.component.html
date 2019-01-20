@@ -1,14 +1,95 @@
 <div class="container">
-  <div class="mt-5 text-center">
-    <h2 class="mb-4">
-      PixivWallpaper is a Windows application that delivers illustrations from <a href="https://www.pixiv.net/ranking.php?mode=daily&content=illust">Pixiv
-        Daily Rankings</a> to your desktop
-      every day.
-    </h2>
-    <img src="https://imgur.com/OkqTJv5.gif" />
-    <h2 class="mt-3">
-      This application uses a smart selection algorithm that selects the best illustration for your screen resolution.
-      See our <a href="https://singf.space/pixiv/controls/demo">demo</a> here.
-    </h2>
+  <h2 class="mt-5 mb-4 text-center">
+    PixivWallpaper is a Windows application that delivers illustrations from <a href="https://www.pixiv.net/ranking.php?mode=daily&content=illust">Pixiv
+      Daily Rankings</a> to your desktop
+    every day.
+  </h2>
+
+  <div class="card">
+    <ngb-carousel class="border-text">
+      <ng-template ngbSlide>
+        <img src="assets/img/desktop_default.jpg" class="marketing-img">
+        <div class="carousel-caption">
+          <h3>Before | Your boring desktop</h3>
+          <p>Download PixivWallpaper and see a change in seconds!</p>
+        </div>
+      </ng-template>
+      <ng-template ngbSlide>
+        <img src="assets/img/desktop_cool.jpg" class="marketing-img">
+        <div class="carousel-caption">
+          <h3>After using PixivWallpaper</h3>
+          <p>Our smart selection algorithm makes your desktop look amazing.</p>
+        </div>
+      </ng-template>
+      <ng-template ngbSlide>
+        <img src="assets/img/desktop_cute.jpg" class="marketing-img">
+        <div class="carousel-caption">
+          <h3>Day 2 | Wallpaper updates every day</h3>
+          <p>Choose from different styles of illustrations, cool or cute, you name it.</p>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+  </div>
+</div>
+
+<div class="alt-color mt-5 pt-1 pb-1">
+  <div class="container">
+    <div class="mt-5" style="color:#f5ec43;font-weight:bold;font-size:4em;letter-spacing: .04em;">FEATURES</div>
+    <div class="mb-5 ml-5 mr-5 mt-3">
+      <h2>
+        Smart selection algorithm
+      </h2>
+      The application implements a smart selection algorithm that selects the best illustration for your screen
+      resolution. Save the trouble to browse through the illustrations, our algorithm will make sure you always get the
+      best looking
+      illustration for your desktop!<br>
+      See our <a href="https://singf.space/pixiv/controls/demo"><b>demo </b></a> here.
+    </div>
+
+    <div class="mb-5 ml-5 mr-5 mt-3">
+      <h2>
+        Easy-to-use interface
+      </h2>
+      A double-click is all you need to change your wallpaper, and your desktop will start to look amazing. Add the
+      application to startup to let it change wallpaper for you every day, without human interaction.
+    </div>
+
+    <div class="m-5">
+      <h2>
+        Pick your personal favorite
+      </h2>
+      You can pick your favorite wallpaper from our <a href="https://singf.space/pixiv/controls/ranking"><b>ranking
+          gallery</b></a> and have it delivered to your desktop!
+    </div>
+
+    <div class="m-5">
+      <h2>
+        Image supersampling
+      </h2>
+      Don't worry if the illustration is too small for your screen, the application's built-in <a href="https://singf.space/pixiv/controls/ranking"><b>waifu2x</b></a>
+      support will make your wallpaper look smooth and clear.
+    </div>
+
+    <div class="m-5">
+      <h2>
+        And much more!
+      </h2>
+      Download the application to discover its features. The application is currently under active development. Stay
+      tuned for more features to come.
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="m-5 text-center">
+    <a href="https://github.com/SingularityF/PixivWallpaper/releases/latest">
+      <button type="button" class="btn btn-warning">
+        <h2>
+          Download Now
+        </h2>
+      </button>
+    </a>
+    <div>64-bit Windows only</div>
   </div>
 </div>
