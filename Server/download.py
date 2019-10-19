@@ -20,14 +20,15 @@ display.start()
 
 firefox_profile = FirefoxProfile()
 # Disable CSS
-firefox_profile.set_preference('permissions.default.stylesheet', 2)
+#firefox_profile.set_preference('permissions.default.stylesheet', 2)
 # Disable images
-firefox_profile.set_preference('permissions.default.image', 2)
+#firefox_profile.set_preference('permissions.default.image', 2)
 # Disable Flash
 firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 #driver=webdriver.Chrome()
 driver=webdriver.Firefox(firefox_profile)
 driver.set_page_load_timeout(90)
+driver.implicitly_wait(30)
 max_retries=3
 
 def prepare_dir(dir_name):
@@ -39,29 +40,35 @@ def prepare_dir(dir_name):
             os.remove(f)
 
 def large_img_url(url):
-    substr="c/600x600/"
-    x=url.find(substr)
-    newurl=url[:x]+url[x+len(substr):]
-    return newurl
+    #substr="c/600x600/"
+    #x=url.find(substr)
+    #newurl=url[:x]+url[x+len(substr):]
+    #return newurl
+    return url
 
 def thumb_img_url(url):
-    substr="c/600x600/"
+    #substr="c/600x600/"
+    substr="i.pximg.net/img-master"
     x=url.find(substr)
-    newurl=url[:x]+"c/240x480/"+url[x+len(substr):]
+    #newurl=url[:x]+"c/240x480/"+url[x+len(substr):]
+    newurl=url[:x]+"i.pximg.net/c/240x480/img-master"+url[x+len(substr):]
     return newurl
 
 def orig_img_url(url):
-    substr1="c/600x600/"
+    #substr1="c/600x600/"
     substr2="img-master"
     substr3="_master1200"
     substr4=".jpg"
-    x1=url.find(substr1)
+    #x1=url.find(substr1)
     x2=url.find(substr2)
     x3=url.find(substr3)
     x4=url.find(substr4)
-    newurl1=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):]
-    newurl2=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".png"
-    newurl3=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".gif"
+    #newurl1=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):]
+    #newurl2=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".png"
+    #newurl3=url[:x1]+url[x1+len(substr1):x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".gif"
+    newurl1=url[:x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):]
+    newurl2=url[:x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".png"
+    newurl3=url[:x2]+"img-original"+url[x2+len(substr2):x3]+url[x3+len(substr3):x4]+".gif"
     return [newurl1,newurl2,newurl3]
 
 def download_image(urls,all_cookies,img_name,referer):
@@ -129,12 +136,14 @@ for i,url in enumerate(medium_urls):
     print("\nAnalyzing links of image ranking {}".format(rank))
     load_and_retry(driver,url,max_retries)
     try:
-        img_url=driver.find_element_by_class_name("_work").find_element_by_tag_name("img").get_attribute("src")
+        #img_url=driver.find_element_by_class_name("_work").find_element_by_tag_name("img").get_attribute("src")
+        img_url=driver.find_element_by_css_selector("img[src*='i.pximg.net/img-master/img']").get_attribute("src")
         downloaded=True
     except:
         downloaded=False
         df_artworks=df_artworks.append({"Rank":rank,"IllustID":illustid,"Filename":"","Thumbnail":"","Original":"","Downloaded":downloaded,"TimeStamp":timestamp},ignore_index=True)
         print("Unable to download image ranking {} because of adult content".format(rank))
+        #break
         continue
     output_name="{}_d".format(rank)
     output_name_t="{}_t".format(rank)
