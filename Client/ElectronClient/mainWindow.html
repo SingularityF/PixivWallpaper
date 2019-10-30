@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Pixiv Wallpaper</title>
+</head>
+
+<body class="p-3">
+    <h1>Pixiv Wallpaper Client</h1>
+    <button class="btn btn-primary" id="btn_set">Set Wallpaper</button>
+    <button class="btn btn-primary" id="btn_pick">Pick Wallpaper</button>
+    <button class="btn btn-primary" id="btn_startup">Add to Startup</button>
+    <button class="btn btn-primary" id="btn_toggle">Auto Set On/Off</button>
+    <button class="btn btn-primary">Preview Wallpaper</button>
+    <script>
+        const path = require('path');
+        const electron = require('electron');
+        const macaddress = require('macaddress');
+        const { ipcRenderer, shell } = electron;
+        document.querySelector('#btn_set').addEventListener('click', () => {
+            ipcRenderer.send('set');
+        });
+        document.querySelector('#btn_pick').addEventListener('click', () => {
+            macaddress.one((err, mac) => {
+                if (err) {
+                    console.log('Cannot get MAC address');
+                } else {
+                    shell.openExternal(path.join('https://singf.space/pixiv/controls/ranking/', mac));
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
