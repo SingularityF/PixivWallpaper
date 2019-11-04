@@ -6,12 +6,17 @@ const url = require('url');
 const path = require('path');
 let fs = require('fs');
 const qs = require('qs');
-const { app, BrowserWindow, Menu, Tray, dialog, ipcMain } = electron;
+const { app, BrowserWindow, Menu, Tray, dialog, ipcMain, screen } = electron;
+
+
+let version = "1.3.5";
+let apiUrl = "https://singf.space/pixiv/select_paper.php";
+let downloadUrl = "https://github.com/SingularityF/PixivWallpaper/releases/latest";
 
 let iconPath = path.join(__dirname, 'icon.ico');
 let mainWindow = null;
 let tray = null;
-let apiUrl = "https://singf.space/pixiv/select_paper.php";
+let timeout = 90000;
 
 const mainMenuTemplate = [
     {
@@ -20,11 +25,48 @@ const mainMenuTemplate = [
 
         ]
     }
-]
+];
 
 async function setWallpaper(filePath) {
     await wallpaper.set(filePath);
     console.log('Wallpaper set!');
+    mainWindow.webContents.send('set');
+    mainWindow.webContents.send('set:done');
+}
+
+async function checkUpdate() {
+    mainWindow.webContents.send('updates');
+    let versionLatest = await axios.get(downloadUrl, {
+        timeout: timeout
+    })
+        .then(res => {
+            responseUrl = res.request.path;
+            let versionLatest = responseUrl.split("/").pop();
+            return versionLatest;
+        })
+        .catch(err => {
+            console.log(err);
+            mainWindow.webContents.send('error:network');
+            mainWindow.webContents.send('check:done');
+            return null;
+        });
+    if (versionLatest == null) return;
+    if (versionLatest == version) {
+        console.log("Latest");
+        mainWindow.webContents.send('latest');
+        mainWindow.webContents.send('check:done');
+    } else {
+        mainWindow.webContents.send('hide');
+        const options = {
+            type: 'info',
+            title: 'Attention',
+            message: `You're running an outdated version of PixivWallpaper. Please consider updating to the latest version.`,
+            buttons: ['OK']
+        };
+        dialog.showMessageBox(mainWindow, options, (index) => {
+        });
+        mainWindow.webContents.send('check:done');
+    }
 }
 
 app.on('ready', () => {
@@ -51,6 +93,8 @@ app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
         icon: iconPath,
+        minWidth: 600,
+        minHeight: 400,
         webPreferences: {
             nodeIntegration: true
         }
@@ -89,16 +133,23 @@ You can shut down the app through tray menu.`,
     tray.on('click', (e) => {
         mainWindow.show();
     });
+});
 
+ipcMain.on('ready', () => {
+    checkUpdate();
 });
 
 ipcMain.on('set', (e) => {
     macaddress.one((err, mac) => {
         if (err) {
             console.log('Cannot get MAC address');
+            mainWindow.webContents.send('error:network');
+            mainWindow.webContents.send('set:done');
         } else {
+            const { width, height } = screen.getPrimaryDisplay().size;
+            aspect_ratio = width / height;
             let data = qs.stringify({
-                ar: 16 / 9,
+                ar: aspect_ratio,
                 uuid: mac,
                 version: '0.0'
             });
@@ -110,19 +161,23 @@ ipcMain.on('set', (e) => {
                 responseType: 'stream'
             };
             axios.post(apiUrl, data, {
-                responseType: 'arraybuffer'
+                responseType: 'arraybuffer',
+                timeout: timeout
             }).then((res) => {
                 //console.log(res);
-                fs.writeFile('wallpaper.png', res.data, 'binary', (err) => {
+                let ext = res['headers']['content-type'].split('/')[1];
+                fs.writeFile(`wallpaper.${ext}`, res.data, 'binary', (err) => {
                     if (err) {
                         console.log('Filed to save wallpaper to local disk');
                     } else {
                         console.log('Download complete');
-                        setWallpaper(path.join(__dirname, 'wallpaper.png'));
+                        setWallpaper(path.join(__dirname, `wallpaper.${ext}`));
                     }
                 });
             }).catch((err) => {
                 console.log(err);
+                mainWindow.webContents.send('error:network');
+                mainWindow.webContents.send('set:done');
             });
         }
     });
