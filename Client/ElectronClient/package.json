@@ -10,9 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
     "electron": "^7.0.0",
     "form-data": "^2.5.1",
+    "jquery": "^3.4.1",
     "macaddress": "^0.2.9",
+    "moment": "^2.24.0",
+    "popper.js": "^1.16.0",
     "qs": "^6.9.0",
     "wallpaper": "^4.4.1"
   }
