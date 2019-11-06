@@ -32,6 +32,14 @@
                 });
             });
 
+            $('#btn_startup').click(() => {
+                ipcRenderer.send('startup');
+            });
+
+            $('#btn_rmstartup').click(() => {
+                ipcRenderer.send('startup:rm');
+            });
+
             $('#btn_download').click(() => {
                 shell.openExternal('https://github.com/SingularityF/PixivWallpaper/releases/latest');
             });
@@ -72,6 +80,21 @@
                 $('#btn_toggle').attr('disabled', false);
             })
 
+            ipcRenderer.on('startup:done', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('Added to Startup!');
+                $('.alert').slideDown();
+            })
+
+            ipcRenderer.on('startup:rm:done', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('Removed from Startup!');
+                $('.alert').slideDown();
+            })
+
+
             ipcRenderer.on('latest', () => {
                 $('.alert').hide();
                 $('.alert').removeClass(alertClass).addClass('alert-success');
@@ -88,6 +111,8 @@
 
             function initSwapper() {
                 // Read from local storage
+                if (localStorage.getItem('swapperState') !== null)
+                    swapperState = localStorage.getItem('swapperState');
                 if (swapperState == 'running') {
                     resetTargetDT('init');
                     $('#badge_toggle').text('Auto-swapper running');
@@ -101,11 +126,13 @@
             function toggleSwapper() {
                 if (swapperState == 'running') {
                     swapperState = 'stopped';
+                    localStorage.setItem('swapperState', swapperState);
                     $('#badge_toggle').text('Auto-swapper stopped');
                     $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-danger');
                 } else {
                     resetTargetDT('init');
                     swapperState = 'running';
+                    localStorage.setItem('swapperState', swapperState);
                     $('#badge_toggle').text('Auto-swapper running');
                     $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-success');
                 }
@@ -125,13 +152,13 @@
                 if (type == 'init') {
                     targetDT = moment();
                 } else {
-                    targetDT = moment().add(1, 'minutes');
+                    targetDT = moment().add(1, 'hours');
                 }
             }
 
             function swapperTick() {
                 if (swapperState == "stopped") {
-                    $('#badge_counter').text('Swapper stopped');
+                    $('#badge_timer').text('Timer stopped');
                     return;
                 }
                 if (moment().isAfter(targetDT)) {
@@ -140,8 +167,8 @@
                 }
                 let min = moment.duration(targetDT.diff(moment())).minutes();
                 let sec = moment.duration(targetDT.diff(moment())).seconds();
-                let counterTemplate = `Swapper refreshing in ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-                $('#badge_counter').text(counterTemplate);
+                let timerTemplate = `Swapper refreshing in ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                $('#badge_timer').text(timerTemplate);
             }
 
             ipcRenderer.send('ready');
@@ -174,7 +201,7 @@
             <button class="btn btn-warning m-1" id="btn_download">Download Latest Version</button>
         </div>
         <div class="fixed-bottom p-2">
-            <span class="badge badge-pill badge-primary p-1 float-left" id="badge_counter"></span>
+            <span class="badge badge-pill badge-primary p-1 float-left" id="badge_timer"></span>
             <span class="badge badge-pill badge-danger p-1 float-right" id="badge_toggle"></span>
         </div>
     </div>
