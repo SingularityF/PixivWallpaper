@@ -1,0 +1,36 @@
+{
+  "name": "pixivwallpaperclient",
+  "version": "1.3.5",
+  "author": "SingularityF",
+  "description": "https://github.com/SingularityF/PixivWallpaper",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "pixiv.wallpaper",
+    "win": {
+      "icon": "icon.ico"
+    }
+  },
+  "license": "ISC",
+  "dependencies": {
+    "appdata-path": "^1.0.0",
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "form-data": "^2.5.1",
+    "jquery": "^3.4.1",
+    "macaddress": "^0.2.9",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.24.0",
+    "popper.js": "^1.16.0",
+    "qs": "^6.9.0",
+    "wallpaper": "^4.4.1"
+  },
+  "devDependencies": {
+    "electron": "^7.0.0",
+    "electron-builder": "^22.1.0"
+  }
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script>
+        window.$ = window.jQuery = require('jquery');
+        require('popper.js');
+        window.Bootstrap = require('bootstrap');
+        const path = require('path');
+        const electron = require('electron');
+        const macaddress = require('macaddress');
+        const moment = require('moment');
+        const { ipcRenderer, shell } = electron;
+        const alertClass = 'alert-primary alert-success alert-danger';
+        let swapperState = 'stopped';
+        let targetDT = null;
+        let timer = null;
+
+        $(() => {
+
+            $('#btn_pick').click(() => {
+                macaddress.one((err, mac) => {
+                    if (err) {
+                        console.log('Cannot get MAC address');
+                    } else {
+                        shell.openExternal(path.join('https://singf.space/pixiv/controls/ranking/', mac));
+                    }
+                });
+            });
+
+            $('#btn_startup').click(() => {
+                ipcRenderer.send('startup');
+            });
+
+            $('#btn_rmstartup').click(() => {
+                ipcRenderer.send('startup:rm');
+            });
+
+            $('#btn_download').click(() => {
+                shell.openExternal('https://github.com/SingularityF/PixivWallpaper/releases/latest');
+            });
+
+            $('#btn_set').click(() => {
+                runSetter();
+            });
+
+            $('#btn_toggle').click(() => {
+                toggleSwapper();
+            });
+
+            ipcRenderer.on('hide', () => {
+                $('.alert').hide();
+            });
+
+            ipcRenderer.on('updates', () => {
+                let spinnerTemplate = `Checking updates... <div class="spinner-border spinner-border-sm text-primary"></div>`;
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-primary');
+                $('.alert').html(spinnerTemplate);
+                $('.alert').slideDown();
+            });
+
+            ipcRenderer.on('set', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('Wallpaper set successfully!');
+                $('.alert').slideDown();
+            });
+
+            ipcRenderer.on('set:done', () => {
+                $('#btn_set').attr('disabled', false);
+            })
+
+            ipcRenderer.on('check:done', () => {
+                initSwapper();
+                $('#btn_toggle').attr('disabled', false);
+            })
+
+            ipcRenderer.on('startup:done', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('Added to Startup!');
+                $('.alert').slideDown();
+            })
+
+            ipcRenderer.on('startup:rm:done', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('Removed from Startup!');
+                $('.alert').slideDown();
+            })
+
+
+            ipcRenderer.on('latest', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-success');
+                $('.alert').text('You are running the latest version!');
+                $('.alert').slideDown();
+            });
+
+            ipcRenderer.on('error:network', () => {
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-danger');
+                $('.alert').text('Failed to communicate with server! Please check your internet connection.');
+                $('.alert').slideDown();
+            })
+
+            function initSwapper() {
+                // Read from local storage
+                if (localStorage.getItem('swapperState') !== null)
+                    swapperState = localStorage.getItem('swapperState');
+                if (swapperState == 'running') {
+                    resetTargetDT('init');
+                    $('#badge_toggle').text('Auto-swapper running');
+                    $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-success');
+                } else {
+                    $('#badge_toggle').text('Auto-swapper stopped');
+                    $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-danger');
+                }
+            }
+
+            function toggleSwapper() {
+                if (swapperState == 'running') {
+                    swapperState = 'stopped';
+                    localStorage.setItem('swapperState', swapperState);
+                    $('#badge_toggle').text('Auto-swapper stopped');
+                    $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-danger');
+                } else {
+                    resetTargetDT('init');
+                    swapperState = 'running';
+                    localStorage.setItem('swapperState', swapperState);
+                    $('#badge_toggle').text('Auto-swapper running');
+                    $('#badge_toggle').removeClass('badge-danger badge-success').addClass('badge-success');
+                }
+            }
+
+            function runSetter() {
+                $('#btn_set').attr('disabled', true);
+                let spinnerTemplate = `Setting wallpaper... <div class="spinner-border spinner-border-sm text-primary"></div>`;
+                $('.alert').hide();
+                $('.alert').removeClass(alertClass).addClass('alert-primary');
+                $('.alert').html(spinnerTemplate);
+                $('.alert').slideDown();
+                ipcRenderer.send('set');
+            }
+
+            function resetTargetDT(type) {
+                if (type == 'init') {
+                    targetDT = moment();
+                } else {
+                    targetDT = moment().add(1, 'hours');
+                }
+            }
+
+            function swapperTick() {
+                if (swapperState == "stopped") {
+                    $('#badge_timer').text('Timer stopped');
+                    return;
+                }
+                if (moment().isAfter(targetDT)) {
+                    runSetter();
+                    resetTargetDT();
+                }
+                let min = moment.duration(targetDT.diff(moment())).minutes();
+                let sec = moment.duration(targetDT.diff(moment())).seconds();
+                let timerTemplate = `Swapper refreshing in ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                $('#badge_timer').text(timerTemplate);
+            }
+
+            ipcRenderer.send('ready');
+            timer = setInterval(() => {
+                swapperTick();
+            }, 1000);
+        });
+    </script>
+    <title>Pixiv Wallpaper v1.3.5</title>
+</head>
+
+<body>
+    <div class="alert alert-success p-1 pl-5 rounded-0 collapse"></div>
+    <div class="container mt-3 text-center">
+        <div>
+            <button class="btn btn-lg btn-primary m-5" id="btn_set">Set Wallpaper</button>
+        </div>
+        <div>
+            <button class="btn btn-outline-primary m-1" id="btn_pick">Pick Wallpaper</button>
+            <button class="btn btn-outline-primary m-1" id="btn_toggle" disabled>Toggle Auto-swapper</button>
+            <button class="btn btn-outline-primary m-1" disabled>Preview Wallpaper</button>
+        </div>
+        <div>
+            <div class="btn-group m-1">
+                <button class="btn btn-outline-primary" id="btn_startup">Run at Startup</button>
+                <button class="btn btn-outline-primary" id="btn_rmstartup">Remove from Startup</button>
+            </div>
+        </div>
+        <div class="text-right mt-5">
+            <button class="btn btn-warning m-1" id="btn_download">Download Latest Version</button>
+        </div>
+        <div class="fixed-bottom p-2">
+            <span class="badge badge-pill badge-primary p-1 float-left" id="badge_timer"></span>
+            <span class="badge badge-pill badge-danger p-1 float-right" id="badge_toggle"></span>
+        </div>
+    </div>
+</body>
+
+</html>
