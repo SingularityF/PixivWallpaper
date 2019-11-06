@@ -1,6 +1,6 @@
 {
   "name": "pixivwallpaperclient",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "author": "SingularityF",
   "description": "https://github.com/SingularityF/PixivWallpaper",
   "main": "main.js",
@@ -12,7 +12,11 @@
   "build": {
     "appId": "pixiv.wallpaper",
     "win": {
-      "icon": "icon.ico"
+      "icon": "./assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./assets/icon.png"
     }
   },
   "license": "ISC",
@@ -30,7 +34,7 @@
     "wallpaper": "^4.4.1"
   },
   "devDependencies": {
-    "electron": "^7.0.0",
+    "electron": "^7.1.0",
     "electron-builder": "^22.1.0"
   }
 }

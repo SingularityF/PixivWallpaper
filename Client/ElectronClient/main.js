@@ -9,13 +9,16 @@ let fs = require('fs');
 const qs = require('qs');
 const { app, BrowserWindow, Menu, Tray, dialog, ipcMain, screen, shell } = electron;
 let { getAppDataPath } = require("appdata-path");
+const os = require("os")
+const __WIN__ = os.platform() === "win32"
 
 let version = "1.3.5";
 let apiUrl = "https://singf.space/pixiv/select_paper.php";
 let downloadUrl = "https://github.com/SingularityF/PixivWallpaper/releases/latest";
 
 const gotTheLock = app.requestSingleInstanceLock();
-let iconPath = path.join(__dirname, 'icon.ico');
+const iconPath = path.resolve(__dirname, `./assets/${__WIN__ ? "icon.ico" : "icon.png"}`)
+const trayIconPath = path.resolve(__dirname, `./assets/${__WIN__ ? "icon.ico" : "tray-icon.png"}`)
 let mainWindow = null;
 let tray = null;
 let timeout = 90000;
@@ -101,7 +104,7 @@ if (!gotTheLock) {
     })
 
     app.on('ready', () => {
-        tray = new Tray(iconPath);
+        tray = new Tray(trayIconPath);
 
         const contextMenu = Menu.buildFromTemplate([
             {
