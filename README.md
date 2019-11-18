@@ -6,13 +6,19 @@
 
 Set Windows wallpaper with daily Pixiv high ranking illustrations
 
-[![Showcase](https://imgur.com/OkqTJv5.gif)](https://imgur.com/OkqTJv5)
-
 将p站每日排行设为壁纸/桌布 [使用说明&下载](https://github.com/SingularityF/PixivWallpaper/blob/master/README.cn.md)
 
 Pixivのイラストデイリーランキングから一番いいのを壁紙にするソフトです [使い方＆ダウンロード](https://github.com/SingularityF/PixivWallpaper/blob/master/README.jp.md)
 
 ## Demo
+
+Decorate your desktop with just a simple click.
+
+![Set Wallpaper Demo](Demo/set_wallpaper_demo.gif)
+
+Don't like it? Then pick your own favorite.
+
+![Pick Wallpaper Demo](Demo/pick_wallpaper_demo.gif)
 
 Find out the best wallpaper from today's Pixiv daily rankings recommended by our application with our [demo](https://singf.space/pixiv/controls/demo) here!
 
@@ -20,18 +26,14 @@ Find out the best wallpaper from today's Pixiv daily rankings recommended by our
 
 Explore the features offered by the application with our [web user interface](http://singf.space/pixiv/controls).
 
-This application runs on Windows that sets the **best** suited illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
+This application, running on Windows and Mac (with limited features), sets the **best looking** illustration from [Pixiv Daily Rankings](https://www.pixiv.net/ranking.php?mode=daily&content=illust) as your wallpaper based on your screen resolution and a smart image selection algorithm.
 
-All you need is a double click, and your wallpaper is set in seconds! If you don't like it, you also have the choice to choose your own wallpaper from Pixiv high ranking illustrations, also with just a few clicks!
+Pixiv is the best place to explore anime style artworks. If you like anime wallpapers, you will like this app!
 
-The application also has [waifu2x](https://github.com/nagadomi/waifu2x) built-in so you'll get a high-resolution image even if the creator only uploaded a low resolution illustration.
+You can enable the built-in swapper to automatically change your wallpaper every day.
 
-## Download client application
+~The application also has [waifu2x](https://github.com/nagadomi/waifu2x) built-in so you'll get a high-resolution image even if the creator only uploaded a low resolution illustration.~
 
-Download the latest binary from [here](https://github.com/SingularityF/PixivWallpaper/releases) if you use a 64-bit machine. Otherwise, you can install python3 on your machine and run set_wallpaper.py in the Client folder.
+## Download
 
-Run `set_wallpaper.exe` to set wallpaper in one click. Run `pixivwallpaper_gui.exe` to get more options.
-
-## If you want to set up a server application that lets clients set Pixiv wallpapers
-
-[See this guide](https://github.com/SingularityF/PixivWallpaper/blob/master/Server/README.md)
+Download the latest binary from [here](https://github.com/SingularityF/PixivWallpaper/releases) if your machine is running 64-bit Windows or Mac OS.
