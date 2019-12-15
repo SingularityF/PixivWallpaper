@@ -11,4 +11,4 @@
 
 `docker run -d -it --name PixivWallpaper pixivwallpaper`
 
-4. In docker, run `python3 download.py` and `php upload.php`
+4. In docker, run `refresh.sh`
