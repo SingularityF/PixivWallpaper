@@ -11,4 +11,4 @@
 
 `docker run -d -it --name pw pixivwallpaper`
 
-4. In docker, run `refresh.sh`
+4. Run `crontab -e` and add the line in file `cron`
