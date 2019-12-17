@@ -9,6 +9,6 @@
 `docker build -t pixivwallpaper .`
 
 
-`docker run -d -it --name PixivWallpaper pixivwallpaper`
+`docker run -d -it --name pw pixivwallpaper`
 
 4. In docker, run `refresh.sh`

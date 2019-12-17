@@ -1,0 +1,1 @@
+10 * * * * docker exec pw bash /usr/local/PixivWallpaper/refresh.sh
