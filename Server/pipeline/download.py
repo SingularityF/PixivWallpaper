@@ -5,12 +5,25 @@ import sys
 import glob
 import time
 import requests
+import datetime
+from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
-dir_name = "images"
+# ========== Declare Constants ========== #
+
+OUTPUT_BASE_DIR = "images"
+OUTPUT_CSV = "artwork_info.csv"
+URL_RANKING = "https://www.pixiv.net/ranking.php?mode=daily&content=illust"
+MAX_RETRIES = 3
+KEEP_DAYS = 7
+
+# ========== Declare Global Variables ========== #
+
+__error_flag__ = False
+
 df_artworks = pd.DataFrame({
     "Rank": [],
     "IllustID": [],
@@ -20,18 +33,28 @@ df_artworks = pd.DataFrame({
     "Downloaded": [],
     "TimeStamp": []
 })
-csv_output_name = "artwork_info.csv"
-url_ranking = "https://www.pixiv.net/ranking.php?mode=daily&content=illust"
-error_flag = False
 
 
-def prepare_dir(dir_name):
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    else:
-        files = glob.glob(dir_name + "/*")
-        for f in files:
-            os.remove(f)
+def clear_dir(dir_name):
+    files = glob.glob(dir_name + "/*")
+    for f in files:
+        os.remove(f)
+
+
+def rm_cache(timestamp):
+    date_latest = datetime.datetime.strptime(timestamp, '%m-%d-%Y')
+    folders = [
+        os.path.basename(f.path) for f in os.scandir(OUTPUT_BASE_DIR)
+        if f.is_dir()
+    ]
+    for folder in folders:
+        date = datetime.datetime.strptime(folder, '%m-%d-%Y')
+        date_diff = date_latest - date
+        if date_diff.days >= KEEP_DAYS:
+            folder_path = Path(OUTPUT_BASE_DIR) / folder
+            folder_path = str(folder_path.resolve())
+            clear_dir(folder_path)
+            os.rmdir(folder_path)
 
 
 def large_img_url(url):
@@ -62,7 +85,7 @@ def orig_img_url(url):
     return [newurl1, newurl2, newurl3]
 
 
-def download_image(urls, all_cookies, img_name, referer):
+def download_image(urls, all_cookies, img_name, referer, dir_name):
     """Try downloading from url, try backup url if fails
     Send request with cookies, referer and UA
     """
@@ -94,13 +117,15 @@ def download_image(urls, all_cookies, img_name, referer):
         if response.status_code != 404:
             break
     output_name = img_name + "." + ext
-    with open(dir_name + "/" + output_name, "wb") as f:
+    output_path = Path(dir_name) / output_name
+    output_path = str(output_path.resolve())
+    with open(output_path, "wb") as f:
         f.write(response.content)
-    return output_name
+    return output_path
 
 
 def load_and_retry(driver, url, retries):
-    global error_flag
+    global __error_flag__
     for _ in range(retries):
         try:
             driver.get(url)
@@ -111,15 +136,15 @@ def load_and_retry(driver, url, retries):
             continue
         return
     print("Page load reached max retries, exiting...")
-    error_flag = True
+    __error_flag__ = True
     raise Exception('Page load failure')
 
 
 if __name__ == '__main__':
     try:
-        #####
-        # Initial configurations
-        #####
+        # ========== Initial Configurations ========== #
+
+        # ----- Prepare Scraper -----
         print("Initializing...")
         display = Display(visible=0, size=(800, 600))
         display.start()
@@ -135,22 +160,35 @@ if __name__ == '__main__':
         driver = webdriver.Firefox(firefox_profile)
         driver.set_page_load_timeout(90)
         driver.implicitly_wait(30)
-        max_retries = 3
 
-        prepare_dir(dir_name)
         print("Loading Pixiv daily rankings")
-        load_and_retry(driver, url_ranking, max_retries)
+        load_and_retry(driver, URL_RANKING, MAX_RETRIES)
         page_title = driver.title
-        timestamp = page_title.split(" ")[-1]
-        print("Rankings loaded")
+        # Slash not allowed in folder names
+        timestamp = page_title.split(" ")[-1].replace('/', '-')
+        print("Rankings loaded {}".format(timestamp))
 
-        # Test if already processed
-        if os.path.exists(csv_output_name):
-            df_output = pd.read_csv(csv_output_name)
-            old_timestamp = df_output["TimeStamp"][0]
-            if old_timestamp == timestamp:
+        # ----- Prepare Output Path -----
+        output_dir = Path('.') / OUTPUT_BASE_DIR / timestamp
+        output_dir = str(output_dir.resolve())
+        csv_path = Path(output_dir) / OUTPUT_CSV
+        csv_path = str(csv_path.resolve())
+
+        # ----- Detect Duplicate Download -----
+        if os.path.exists(output_dir):
+            # Is previous download successful?
+            if os.path.exists(csv_path):
                 print("Already downloaded, exiting ...")
                 raise Exception('Illustration already downloaded')
+            else:
+                clear_dir(output_dir)
+        else:
+            os.makedirs(output_dir)
+
+        # ----- Remove Old Image Cache -----
+        rm_cache(timestamp)
+
+        # ========== Begin Downloads ========== #
 
         medium_urls = []
         illust_ids = []
@@ -164,7 +202,7 @@ if __name__ == '__main__':
             illustid = illust_ids[i]
             rank = i + 1
             print("\nAnalyzing links of image ranking {}".format(rank))
-            load_and_retry(driver, url, max_retries)
+            load_and_retry(driver, url, MAX_RETRIES)
             try:
                 img_url = driver.find_element_by_css_selector(
                     "img[src*='i.pximg.net/img-master/img']").get_attribute(
@@ -194,13 +232,13 @@ if __name__ == '__main__':
             print("Downloading image ranking {}".format(rank))
             filename = download_image([large_img_url(img_url)],
                                       driver.get_cookies(), output_name,
-                                      driver.current_url)
+                                      driver.current_url, output_dir)
             thumbnail = download_image([thumb_img_url(img_url)],
                                        driver.get_cookies(), output_name_t,
-                                       driver.current_url)
+                                       driver.current_url, output_dir)
             original = download_image(orig_img_url(img_url),
                                       driver.get_cookies(), output_name_l,
-                                      driver.current_url)
+                                      driver.current_url, output_dir)
             df_artworks = df_artworks.append(
                 {
                     "Rank": rank,
@@ -212,10 +250,13 @@ if __name__ == '__main__':
                     "TimeStamp": timestamp
                 },
                 ignore_index=True)
-        df_artworks.to_csv(csv_output_name, index=False)
+
+        df_artworks.to_csv(csv_path, index=False)
+        with open('csv_path', 'w') as f:
+            f.write(csv_path)
     finally:
         print("Running Garbage Collection")
         driver.quit()
         display.stop()
-        if error_flag:
+        if __error_flag__:
             sys.exit(1)
