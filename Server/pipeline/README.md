@@ -13,4 +13,6 @@
 
 `docker run -d -it --mount type=bind,src=mount-location,target=/usr/local/PixivWallpaper/images --name pw pixivwallpaper`
 
-5. Run `crontab -e` and add the line in file `cron`
+5. Run `crontab -e` and add the line in file `cron`, replace `COMMAND_TO_MOUNT` with command in step 1
+
+6. Schedule task to start instance every hour at 5 minutes
