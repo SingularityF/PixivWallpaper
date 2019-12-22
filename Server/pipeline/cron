@@ -1,1 +1,1 @@
-10 * * * * docker exec pw bash /usr/local/PixivWallpaper/refresh.sh
+10 * * * * ( COMMAND_TO_MOUNT; docker start pw; docker exec pw bash /usr/local/PixivWallpaper/refresh.sh; /sbin/shutdown now ) >/root/log 2>&1
