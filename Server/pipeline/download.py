@@ -62,9 +62,9 @@ def large_img_url(url):
 
 
 def thumb_img_url(url):
-    substr = "i.pximg.net/img-master"
+    substr = "i-cf.pximg.net/img-master"
     x = url.find(substr)
-    newurl = url[:x] + "i.pximg.net/c/240x480/img-master" + url[x +
+    newurl = url[:x] + "i-cf.pximg.net/c/240x480/img-master" + url[x +
                                                                 len(substr):]
     return newurl
 
@@ -205,7 +205,7 @@ if __name__ == '__main__':
             load_and_retry(driver, url, MAX_RETRIES)
             try:
                 img_url = driver.find_element_by_css_selector(
-                    "img[src*='i.pximg.net/img-master/img']").get_attribute(
+                    "img[src*='pximg.net/img-master/img']").get_attribute(
                         "src")
                 downloaded = True
             except:
