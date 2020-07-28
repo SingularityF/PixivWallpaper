@@ -40,10 +40,6 @@
                 ipcRenderer.send('startup:rm');
             });
 
-            $('#btn_download').click(() => {
-                shell.openExternal('https://github.com/SingularityF/PixivWallpaper/releases/latest');
-            });
-
             $('#btn_set').click(() => {
                 runSetter();
             });
@@ -178,6 +174,7 @@
         });
     </script>
     <title>Pixiv Wallpaper v1.3.5</title>
+	<link rel="stylesheet" href="dark-mode-res/dark-mode.css">
 </head>
 
 <body>
@@ -200,11 +197,16 @@
         <div class="text-right mt-5">
             <button class="btn btn-warning m-1" id="btn_download">Download Latest Version</button>
         </div>
+		<div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="darkSwitch" />
+            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+        </div>
         <div class="fixed-bottom p-2">
             <span class="badge badge-pill badge-primary p-1 float-left" id="badge_timer"></span>
             <span class="badge badge-pill badge-danger p-1 float-right" id="badge_toggle"></span>
         </div>
     </div>
+	<script src="dark-mode-res/dark-mode-switch.min.js"></script>
 </body>
 
 </html>
