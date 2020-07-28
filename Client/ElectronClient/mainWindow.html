@@ -39,6 +39,10 @@
             $('#btn_rmstartup').click(() => {
                 ipcRenderer.send('startup:rm');
             });
+			
+			$('#btn_download').click(() => {
+                shell.openExternal('https://github.com/SingularityF/PixivWallpaper/releases/latest');
+            });
 
             $('#btn_set').click(() => {
                 runSetter();
