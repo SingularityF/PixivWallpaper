@@ -12,7 +12,7 @@ let { getAppDataPath } = require("appdata-path");
 const os = require("os")
 const __WIN__ = os.platform() === "win32"
 
-let version = "1.3.5";
+let version = "1.3.6";
 let apiUrl = "https://singf.space/pixiv/select_paper.php";
 let downloadUrl = "https://github.com/SingularityF/PixivWallpaper/releases/latest";
 
