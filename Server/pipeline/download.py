@@ -17,6 +17,7 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 OUTPUT_BASE_DIR = "images"
 OUTPUT_CSV = "artwork_info.csv"
 URL_RANKING = "https://www.pixiv.net/ranking.php?mode=daily&content=illust"
+BUCKET_URL_PREFIX = "https://storage.googleapis.com/image_cache"
 MAX_RETRIES = 3
 KEEP_DAYS = 7
 
@@ -230,15 +231,18 @@ if __name__ == '__main__':
             output_name_t = "{}_t".format(rank)
             output_name_l = "{}_l".format(rank)
             print("Downloading image ranking {}".format(rank))
-            filename = download_image([large_img_url(img_url)],
-                                      driver.get_cookies(), output_name,
-                                      driver.current_url, output_dir)
-            thumbnail = download_image([thumb_img_url(img_url)],
-                                       driver.get_cookies(), output_name_t,
-                                       driver.current_url, output_dir)
-            original = download_image(orig_img_url(img_url),
-                                      driver.get_cookies(), output_name_l,
-                                      driver.current_url, output_dir)
+            filename_path = download_image([large_img_url(img_url)],
+                    driver.get_cookies(), output_name,
+                    driver.current_url, output_dir)
+            thumbnail_path = download_image([thumb_img_url(img_url)],
+                    driver.get_cookies(), output_name_t,
+                    driver.current_url, output_dir)
+            original_path = download_image(orig_img_url(img_url),
+                    driver.get_cookies(), output_name_l,
+                    driver.current_url, output_dir)
+            filename = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(filename_path)}"
+            thumbnail = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(thumbnail_path)}"
+            original = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(original_path)}"
             df_artworks = df_artworks.append(
                 {
                     "Rank": rank,
