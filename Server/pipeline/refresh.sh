@@ -1,5 +1,5 @@
 #!/bin/bash
-gcsfuse image_cache ./images
+gcsfuse --key-file /usr/local/PixivWallpaper/service_account.json image_cache ./images
 python3 download.py
 if [ $? -eq 0 ]
 then
@@ -12,4 +12,5 @@ else
   kill `pgrep geckodriver`
   exit 1
 fi
+node data_upload/index.js
 php upload.php
