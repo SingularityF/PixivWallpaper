@@ -1,4 +1,5 @@
 #!/bin/bash
+gcsfuse image_cache ./images
 python3 download.py
 if [ $? -eq 0 ]
 then

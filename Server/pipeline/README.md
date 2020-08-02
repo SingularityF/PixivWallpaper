@@ -1,6 +1,6 @@
 ## How to run
 
-1. Mount cloud storage to `mount-location` with FUSE
+1. Copy service account json credential to this folder, rename to `service_account.json`
 
 2. Install docker
 
@@ -11,8 +11,8 @@
 `docker build -t pixivwallpaper .`
 
 
-`docker run -d -it --mount type=bind,src=mount-location,target=/usr/local/PixivWallpaper/images --name pw pixivwallpaper`
+`docker run -d -it --privileged --name pw pixivwallpaper`
 
-5. Run `crontab -e` and add the line in file `cron`, replace `COMMAND_TO_MOUNT` with command in step 1
+5. Run `crontab -e` and add the line in file `cron`
 
 6. Schedule task to start instance every hour at 5 minutes (in cron term, `5 * * * *`)
