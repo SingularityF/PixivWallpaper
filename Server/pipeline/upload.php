@@ -119,19 +119,19 @@ foreach ($csv as $row) {
 		$illustid = $row["IllustID"];
 		$timestamp = date('Y-m-d', strtotime(str_replace('-', '/', $row["TimeStamp"])));
 
-		$img_path = $row["Original"];
-		$format = explode(".", $row["Original"])[1];
+		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Original"])[1];
+		$format = end(explode(".", $row["Original"]));
 		$status = upload_img($img_path, $ranking, $illustid, $format, "L", $timestamp);
 
+		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Filename"])[1];
+		$format = end(explode(".", $row["Filename"]));
+		if ($status == 1)
+				upload_img($img_path, $ranking, $illustid, $format, "D", $timestamp);
 
-		$img_path = $row["Filename"];
-		$format = explode(".", $row["Filename"])[1];
+		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Thumbnail"])[1];
+		$format = end(explode(".", $row["Thumbnail"]));
 		if ($status == 1)
-			upload_img($img_path, $ranking, $illustid, $format, "D", $timestamp);
-		$img_path = $row["Thumbnail"];
-		$format = explode(".", $row["Thumbnail"])[1];
-		if ($status == 1)
-			upload_img($img_path, $ranking, $illustid, $format, "T", $timestamp);
+				upload_img($img_path, $ranking, $illustid, $format, "T", $timestamp);
 	}
 }
 
