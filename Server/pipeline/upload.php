@@ -117,14 +117,14 @@ foreach ($csv as $row) {
 	if ($row["Downloaded"] == 1) {
 		$ranking = $row["Rank"];
 		$illustid = $row["IllustID"];
-		$timestamp = date('Y-m-d', strtotime(str_replace('-', '/', $row["TimeStamp"])));
+		$timestamp = date('Y-m-d', strtotime(str_replace('-', '/', $row["Timestamp"])));
 
 		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Original"])[1];
 		$format = end(explode(".", $row["Original"]));
 		$status = upload_img($img_path, $ranking, $illustid, $format, "L", $timestamp);
 
-		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Filename"])[1];
-		$format = end(explode(".", $row["Filename"]));
+		$img_path ="/usr/local/PixivWallpaper/images" . explode("image_cache",$row["Compressed"])[1];
+		$format = end(explode(".", $row["Compressed"]));
 		if ($status == 1)
 				upload_img($img_path, $ranking, $illustid, $format, "D", $timestamp);
 

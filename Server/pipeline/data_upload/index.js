@@ -31,12 +31,12 @@ async function dbInsert(collectionName, data) {
 }
 
 saveRanking = (data) => {
-  [month, day, year] = data["TimeStamp"].split("-");
+  [month, day, year] = data["Timestamp"].split("-");
   data = {
     Rank: parseInt(data["Rank"]),
     IllustID: parseInt(data["IllustID"]),
     Downloaded: Boolean(parseInt(data["Downloaded"])),
-    DateString: data["TimeStamp"],
+    DateString: data["Timestamp"],
     Created: new Date(Date.now()),
     Updated: new Date(Date.now()),
   };
@@ -51,7 +51,7 @@ saveLocation = (data) => {
     IllustID: parseInt(data["IllustID"]),
     Thumbnail: data["Thumbnail"],
     Original: data["Original"],
-    Default: data["Filename"],
+    Compressed: data["Compressed"],
     Created: new Date(Date.now()),
     Updated: new Date(Date.now()),
   };

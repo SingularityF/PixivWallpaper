@@ -28,11 +28,11 @@ __error_flag__ = False
 df_artworks = pd.DataFrame({
     "Rank": [],
     "IllustID": [],
-    "Filename": [],
+    "Compressed": [],
     "Thumbnail": [],
     "Original": [],
     "Downloaded": [],
-    "TimeStamp": []
+    "Timestamp": []
 })
 
 
@@ -222,11 +222,11 @@ if __name__ == '__main__':
                     {
                         "Rank": rank,
                         "IllustID": illustid,
-                        "Filename": "",
+                        "Compressed": "",
                         "Thumbnail": "",
                         "Original": "",
                         "Downloaded": downloaded,
-                        "TimeStamp": timestamp
+                        "Timestamp": timestamp
                     },
                     ignore_index=True)
                 print(
@@ -234,31 +234,31 @@ if __name__ == '__main__':
                     .format(rank))
                 # break
                 continue
-            output_name = "{}_d".format(rank)
+            output_name_c = "{}_c".format(rank)
             output_name_t = "{}_t".format(rank)
-            output_name_l = "{}_l".format(rank)
+            output_name_o = "{}_o".format(rank)
             print("Downloading image ranking {}".format(rank))
-            filename_path = download_image([large_img_url(img_url)],
-                    driver.get_cookies(), output_name,
+            compressed_path = download_image([large_img_url(img_url)],
+                    driver.get_cookies(), output_name_c,
                     driver.current_url, output_dir)
             thumbnail_path = download_image([thumb_img_url(img_url, thumb_prefix)],
                     driver.get_cookies(), output_name_t,
                     driver.current_url, output_dir)
             original_path = download_image(orig_img_url(img_url),
-                    driver.get_cookies(), output_name_l,
+                    driver.get_cookies(), output_name_o,
                     driver.current_url, output_dir)
-            filename = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(filename_path)}"
+            compressed = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(compressed_path)}"
             thumbnail = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(thumbnail_path)}"
             original = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(original_path)}"
             df_artworks = df_artworks.append(
                 {
                     "Rank": rank,
                     "IllustID": illustid,
-                    "Filename": filename,
+                    "Compressed": compressed,
                     "Thumbnail": thumbnail,
                     "Original": original,
                     "Downloaded": downloaded,
-                    "TimeStamp": timestamp
+                    "Timestamp": timestamp
                 },
                 ignore_index=True)
         df_artworks.to_csv(csv_path, index=False)
