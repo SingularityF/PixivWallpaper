@@ -1,3 +1,4 @@
+from pyvirtualdisplay import Display
 import pandas as pd
 import os
 import sys
