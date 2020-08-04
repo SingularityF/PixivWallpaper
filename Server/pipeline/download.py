@@ -1,4 +1,3 @@
-from pyvirtualdisplay import Display
 import pandas as pd
 import os
 import sys
@@ -58,16 +57,20 @@ def rm_cache(timestamp):
             os.rmdir(folder_path)
 
 
+def process_thumb_prefix(thumb_urls):
+    # Remove thumbnail placeholders
+    thumb_urls = [url for url in thumb_urls if 'transparent' not in url]
+    sample_thumb_url = thumb_urls[0]
+    return sample_thumb_url.split('img-master')[0]
+
+
 def large_img_url(url):
     return url
 
 
-def thumb_img_url(url):
-    substr = "i-cf.pximg.net/img-master"
-    x = url.find(substr)
-    newurl = url[:x] + "i-cf.pximg.net/c/240x480/img-master" + url[x +
-                                                                len(substr):]
-    return newurl
+def thumb_img_url(url, thumb_prefix):
+    processed_url = thumb_prefix + 'img-master' + url.split('img-master')[1]
+    return processed_url
 
 
 def orig_img_url(url):
@@ -185,20 +188,23 @@ if __name__ == '__main__':
                 clear_dir(output_dir)
         else:
             os.makedirs(output_dir)
-
         # ----- Remove Old Image Cache -----
         rm_cache(timestamp)
-
         # ========== Begin Downloads ========== #
-
         medium_urls = []
         illust_ids = []
+        thumb_urls = []
         artworks = driver.find_elements_by_class_name("ranking-item")
         for artwork in artworks:
             illust_ids.append(artwork.get_attribute("data-id"))
+            thumb_urls.append(artwork.find_element_by_class_name("_work").
+                    find_element_by_class_name("_layout-thumbnail").
+                    find_element_by_class_name("_thumbnail").
+                    get_attribute("src"))
             medium_urls.append(
                 artwork.find_element_by_class_name("_work").get_attribute(
                     "href"))
+        thumb_prefix = process_thumb_prefix(thumb_urls)
         for i, url in enumerate(medium_urls):
             illustid = illust_ids[i]
             rank = i + 1
@@ -234,7 +240,7 @@ if __name__ == '__main__':
             filename_path = download_image([large_img_url(img_url)],
                     driver.get_cookies(), output_name,
                     driver.current_url, output_dir)
-            thumbnail_path = download_image([thumb_img_url(img_url)],
+            thumbnail_path = download_image([thumb_img_url(img_url, thumb_prefix)],
                     driver.get_cookies(), output_name_t,
                     driver.current_url, output_dir)
             original_path = download_image(orig_img_url(img_url),
@@ -254,7 +260,6 @@ if __name__ == '__main__':
                     "TimeStamp": timestamp
                 },
                 ignore_index=True)
-
         df_artworks.to_csv(csv_path, index=False)
         with open('csv_path', 'w') as f:
             f.write(csv_path)
