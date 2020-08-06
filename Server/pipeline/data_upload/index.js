@@ -3,31 +3,47 @@ const d3 = require("d3");
 const yaml = require("js-yaml");
 const { MongoClient } = require("mongodb");
 
-let configFile = fs.readFileSync('config.yaml', 'utf8');
+let configFile = fs.readFileSync("config.yaml", "utf8");
 let configs = yaml.safeLoad(configFile);
 
-const mongodbConnection = configs['db']['uri']
-const client = new MongoClient(mongodbConnection);
+const mongodbConnection = configs["db"]["uri"];
+const client = new MongoClient(mongodbConnection, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 let csvFilePath = "";
 let queueCounter = 0;
+let dateString = "";
 
-function counterCheck(){
-  if (queueCounter==0){
-    client.close();
-    console.log("Client closed");
+function counterCheck() {
+  if (queueCounter == 0) {
+    data = {
+      Status: "Complete",
+      DateString: dateString,
+      Created: new Date(Date.now()),
+      Updated: new Date(Date.now()),
+    };
+    client
+      .db("AppData")
+      .collection("PipelineStatus")
+      .insertOne(data)
+      .then(() => {
+        client.close();
+        console.log("Client closed");
+      });
   }
 }
 
 async function dbInsert(collectionName, data) {
-    const database = client.db("AppData");
-    const collection = database.collection(collectionName);
-    queueCounter ++;
-    const result = await collection.insertOne(data);
-    console.log(
-      `${result.insertedCount} documents were inserted with the _id: ${result.insertedId}`
-    );
-    queueCounter --;
-    counterCheck();
+  const database = client.db("AppData");
+  const collection = database.collection(collectionName);
+  queueCounter++;
+  const result = await collection.insertOne(data);
+  console.log(
+    `${result.insertedCount} documents were inserted with the _id: ${result.insertedId}`
+  );
+  queueCounter--;
+  counterCheck();
 }
 
 saveRanking = (data) => {
@@ -58,19 +74,19 @@ saveLocation = (data) => {
   dbInsert("ImageLocation", data).catch(console.dir);
 };
 
-client.connect(err=>{
+client.connect((err) => {
+  csvFilePath = fs.readFileSync("csv_path", "utf8").trim();
 
-csvFilePath = fs.readFileSync("csv_path", "utf8").trim();
-
-fs.readFile(csvFilePath, "utf8", (err, csvData) => {
-  let scraperData = d3.csvParse(csvData);
-  for (let idx in scraperData) {
-    if (idx == "columns") continue;
-    row = scraperData[idx];
-    saveRanking(row);
-    saveLocation(row);
-  }
-  counterCheck();
+  fs.readFile(csvFilePath, "utf8", (err, csvData) => {
+    let scraperData = d3.csvParse(csvData);
+    dateString = scraperData[0]["Timestamp"];
+    for (let idx in scraperData) {
+      if (idx == "columns") continue;
+      row = scraperData[idx];
+      saveRanking(row);
+      saveLocation(row);
+    }
+    counterCheck();
+  });
 });
 
-});
