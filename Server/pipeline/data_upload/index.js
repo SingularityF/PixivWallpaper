@@ -5,8 +5,8 @@ const { MongoClient } = require("mongodb");
 
 let configFile = fs.readFileSync("config.yaml", "utf8");
 let configs = yaml.safeLoad(configFile);
-
 const mongodbConnection = configs["db"]["uri"];
+
 const client = new MongoClient(mongodbConnection, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -46,6 +46,25 @@ async function dbInsert(collectionName, data) {
   counterCheck();
 }
 
+duplicateCheckInsert = (field, collectionName, data) => {
+  queryData = {};
+  queryData[field] = data[field];
+  queueCounter++;
+  client
+    .db("AppData")
+    .collection(collectionName)
+    .findOne(queryData)
+    .then((res) => {
+      if (res === null) {
+        data["IsNew"] = true;
+      } else {
+        data["IsNew"] = false;
+      }
+      dbInsert(collectionName, data).catch(console.dir);
+      queueCounter--;
+    });
+};
+
 saveRanking = (data) => {
   [month, day, year] = data["Timestamp"].split("-");
   data = {
@@ -56,7 +75,7 @@ saveRanking = (data) => {
     Created: new Date(Date.now()),
     Updated: new Date(Date.now()),
   };
-  dbInsert("Ranking", data).catch(console.dir);
+  duplicateCheckInsert("IllustID", "Ranking", data);
 };
 
 saveLocation = (data) => {
