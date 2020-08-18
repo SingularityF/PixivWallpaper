@@ -2,3 +2,7 @@
 # yarn lockfile v1
 
 
+wallpaper@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/wallpaper/-/wallpaper-4.4.1.tgz#45d8c3236e0937a742a3ce5b27fc239b73bb8859"
+  integrity sha512-eHB4VgIwGmL0NAfghxKO4UY0YZbJyvyC3HKE6LOWtjvlMiT8/ywgVOWXd2+4E7pGPWrRY92scTw+e6bgoq66zQ==

@@ -8,8 +8,13 @@ import { feedIllustUpdate } from '../../actions/feedIllustActions';
 import StoreData, { IllustData } from '../../constants/storeType';
 import moment from 'moment';
 import axios from 'axios';
-import { feedDownloadThumbnailUpdate } from '../../actions/feedDownloadActions';
+import {
+  feedThumbnailUpdate,
+  feedThumbnailReset,
+} from '../../actions/feedThumbnailActions';
+import { appInitialized } from '../../actions/appInitializedActions';
 import GlobalStyles from '../../constants/styles.json';
+import { downloadImage } from '../DownloadManager/DownloadManager';
 
 let timer: any = null;
 let prevState: any = null;
@@ -20,18 +25,47 @@ export default function Feed() {
 
   let duration = moment.duration(timer_seconds, 'seconds');
 
+  function readLocalStorage() {
+    let feedDateLS =
+      localStorage.getItem('feedDate') == null
+        ? ''
+        : localStorage.getItem('feedDate');
+
+    let feedIllustLS =
+      localStorage.getItem('feedIllust') == null
+        ? []
+        : JSON.parse(localStorage.getItem('feedIllust'));
+    let feedThumbnailLS =
+      localStorage.getItem('feedThumbnail') == null
+        ? {}
+        : JSON.parse(localStorage.getItem('feedThumbnail'));
+    store.dispatch(feedDateUpdate(feedDateLS));
+    store.dispatch(feedIllustUpdate(feedIllustLS));
+    for (const [key, value] of Object.entries(feedThumbnailLS)) {
+      store.dispatch(feedThumbnailUpdate(parseInt(key), value));
+    }
+  }
+
   useEffect(() => {
-    if (prevState.feedTimer >= 0 && store.getState().feedTimer <= 0) {
+    if (
+      store.getState().appInitialized &&
+      prevState.feedTimer >= 0 &&
+      store.getState().feedTimer <= 0
+    ) {
       store.dispatch(reset());
       axios
         .get(
           'https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/pipeline/date/latest'
         )
         .then((res) => {
+          localStorage.setItem('feedDate', res.data.latest);
           store.dispatch(feedDateUpdate(res.data.latest));
         });
     }
-    if (prevState.feedDate != store.getState().feedDate) {
+    if (
+      store.getState().appInitialized &&
+      prevState.feedDate != store.getState().feedDate
+    ) {
       axios
         .get(
           `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/ranking/unique/${
@@ -39,10 +73,18 @@ export default function Feed() {
           }`
         )
         .then((res) => {
+          localStorage.setItem(
+            'feedIllust',
+            JSON.stringify(res.data.illustData)
+          );
           store.dispatch(feedIllustUpdate(res.data.illustData));
         });
     }
-    if (prevState.feedIllust != store.getState().feedIllust) {
+    if (
+      store.getState().appInitialized &&
+      prevState.feedIllust != store.getState().feedIllust
+    ) {
+      store.dispatch(feedThumbnailReset());
       let currState: StoreData = store.getState();
       currState.feedIllust.forEach((illust: IllustData) => {
         axios
@@ -50,8 +92,18 @@ export default function Feed() {
             `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/thumbnail/${illust.IllustID}`
           )
           .then((res) => {
-            store.dispatch(
-              feedDownloadThumbnailUpdate(illust.IllustID, res.data.url)
+            downloadImage(
+              res.data.url,
+              illust.IllustID,
+              store.getState().feedDate,
+              'thumbnail',
+              (filePath: string) => {
+                store.dispatch(feedThumbnailUpdate(illust.IllustID, filePath));
+                localStorage.setItem(
+                  'feedThumbnail',
+                  JSON.stringify(store.getState().feedThumbnail)
+                );
+              }
             );
           });
       });
@@ -65,11 +117,16 @@ export default function Feed() {
         store.dispatch(tick());
       }, 1000);
     }
+    readLocalStorage();
+    store.dispatch(appInitialized());
     prevState = store.getState();
   });
 
   return (
-    <footer className={styles.footer} style={{height:GlobalStyles.footerHeight}}>
+    <footer
+      className={styles.footer}
+      style={{ height: GlobalStyles.footerHeight }}
+    >
       <Chip
         size="small"
         label={

@@ -1,11 +1,12 @@
 export default interface StoreData {
-    feedTimer: number,
-    feedDate: String,
-    feedIllust: Array<IllustData>,
-    feedDownload: { [key: number]: string }
-};
+  appInitialized: boolean;
+  feedTimer: number;
+  feedDate: string;
+  feedIllust: Array<IllustData>;
+  feedThumbnail: { [key: number]: string };
+}
 
-export interface IllustData{
-    Rank: number,
-    IllustID: number
-};
+export interface IllustData {
+  Rank: number;
+  IllustID: number;
+}

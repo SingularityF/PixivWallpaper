@@ -14,7 +14,12 @@ import path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import wallpaper from 'wallpaper';
 import MenuBuilder from './menu';
+
+global.setWallpaper = (filePath: string) => {
+  wallpaper.set(filePath);
+};
 
 export default class AppUpdater {
   constructor() {

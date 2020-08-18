@@ -1,6 +1,6 @@
-export const feedDateUpdate = (data: String) =>{
-    return {
-        type: 'DATE_UPDATE',
-        data: data
-    };
+export const feedDateUpdate = (data: string) => {
+  return {
+    type: 'DATE_UPDATE',
+    data: data,
+  };
 };

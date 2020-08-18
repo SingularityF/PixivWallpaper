@@ -7,12 +7,25 @@ import {
   CardMedia,
   CardContent,
   CircularProgress,
+  IconButton,
 } from '@material-ui/core';
 import { useSelector, useStore } from 'react-redux';
 import StoreData from '../../constants/storeType';
 import { makeStyles } from '@material-ui/core/styles';
 import GlobalStyles from '../../constants/styles.json';
+import { setWallpaper } from '../WallpaperSetter/WallpaperSetter';
 import EmptyPatternImg from '../../res/imgs/empty_pattern_gray.png';
+import axios from 'axios';
+import process from 'process';
+import { remote } from 'electron';
+import path from 'path';
+import fs from 'fs';
+import {
+  createFolder,
+  isDownloaded,
+  downloadImage,
+} from '../DownloadManager/DownloadManager';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 const useStyles = makeStyles({
   root: {
@@ -23,16 +36,45 @@ const useStyles = makeStyles({
   },
 });
 
+let downloadAndSet = async (illustID: number, feedDate: string) => {
+  let imageUrl = await axios
+    .get(
+      `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/original/${illustID}`
+    )
+    .then((res) => {
+      return res.data.url;
+    });
+  downloadImage(
+    imageUrl,
+    illustID,
+    feedDate,
+    'original',
+    (filePath: string) => {
+      setWallpaper(filePath);
+    }
+  );
+};
+
 export default function Ranking() {
   const classes = useStyles();
+  const feedDate = useSelector((state: StoreData) => state.feedDate);
   const illusts = useSelector((state: StoreData) => state.feedIllust);
-  const thumbnails = useSelector((state: StoreData) => state.feedDownload);
+  const thumbnails = useSelector((state: StoreData) => state.feedThumbnail);
 
-  const illustTemplate = (id: number, url: string) => {
+  const illustTemplate = (
+    id: number,
+    illustID: number,
+    url: string,
+    feedDate: string
+  ) => {
     return (
       <Grid item align="center" xs={12} sm={6} md={4} key={id}>
         <Card key={id} className={classes.root}>
-          <CardActionArea>
+          <CardActionArea
+            onClick={() => {
+              downloadAndSet(illustID, feedDate);
+            }}
+          >
             <Box textAlign="center" p={1}>
               # {id}
             </Box>
@@ -42,6 +84,13 @@ export default function Ranking() {
               image={url == null ? EmptyPatternImg : url}
             />
           </CardActionArea>
+          {isDownloaded(illustID, feedDate) ? (
+            <CardContent>
+              <IconButton>
+                <CloudDownloadIcon color="primary" />
+              </IconButton>
+            </CardContent>
+          ) : null}
         </Card>
       </Grid>
     );
@@ -63,7 +112,12 @@ export default function Ranking() {
       {illusts.length == 0 ? <CircularProgress color="secondary" /> : null}
       <Grid container spacing={3}>
         {illusts.map((data) =>
-          illustTemplate(data.Rank, thumbnails[data.IllustID])
+          illustTemplate(
+            data.Rank,
+            data.IllustID,
+            thumbnails[data.IllustID],
+            feedDate
+          )
         )}
       </Grid>
     </div>

@@ -4,15 +4,17 @@ import { History } from 'history';
 import feedTimerReducer from './reducers/feedTimerReducer';
 import feedDateReducer from './reducers/feedDateReducer';
 import feedIllustReducer from './reducers/feedIllustReducer';
-import feedDownloadReducer from './reducers/feedDownloadReducer';
+import feedThumbnailReducer from './reducers/feedThumbnailReducer';
+import appInitializedReducer from './reducers/appInitializedReducer';
 // eslint-disable-next-line import/no-cycle
 
 export default function createRootReducer(history: History) {
   return combineReducers({
     router: connectRouter(history),
+    appInitialized: appInitializedReducer,
     feedTimer: feedTimerReducer,
     feedDate: feedDateReducer,
     feedIllust: feedIllustReducer,
-    feedDownload: feedDownloadReducer
+    feedThumbnail: feedThumbnailReducer,
   });
 }
