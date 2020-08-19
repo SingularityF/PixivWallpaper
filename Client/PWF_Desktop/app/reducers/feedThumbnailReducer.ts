@@ -1,4 +1,4 @@
-interface Action {
+interface ActionType {
   type: string;
   key: number;
   data: string;
@@ -6,7 +6,7 @@ interface Action {
 
 export default function feedThumbnailReducer(
   state: { [key: number]: string } = {},
-  action: Action
+  action: ActionType
 ) {
   switch (action.type) {
     case 'THUMBNAIL_RESET':

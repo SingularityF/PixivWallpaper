@@ -19,10 +19,10 @@ import axios from 'axios';
 import process from 'process';
 import { remote } from 'electron';
 import path from 'path';
+import { feedDownloadUpdate } from '../../actions/feedDownloadActions';
 import fs from 'fs';
 import {
   createFolder,
-  isDownloaded,
   downloadImage,
 } from '../DownloadManager/DownloadManager';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
@@ -36,30 +36,37 @@ const useStyles = makeStyles({
   },
 });
 
-let downloadAndSet = async (illustID: number, feedDate: string) => {
-  let imageUrl = await axios
-    .get(
-      `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/original/${illustID}`
-    )
-    .then((res) => {
-      return res.data.url;
-    });
-  downloadImage(
-    imageUrl,
-    illustID,
-    feedDate,
-    'original',
-    (filePath: string) => {
-      setWallpaper(filePath);
-    }
-  );
-};
-
 export default function Ranking() {
   const classes = useStyles();
+  const store = useStore();
   const feedDate = useSelector((state: StoreData) => state.feedDate);
   const illusts = useSelector((state: StoreData) => state.feedIllust);
   const thumbnails = useSelector((state: StoreData) => state.feedThumbnail);
+  const downloads = useSelector((state: StoreData) => state.feedDownload);
+
+  let downloadAndSet = async (illustID: number, feedDate: string) => {
+    let imageUrl = await axios
+      .get(
+        `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/original/${illustID}`
+      )
+      .then((res) => {
+        return res.data.url;
+      });
+    downloadImage(
+      imageUrl,
+      illustID,
+      feedDate,
+      'original',
+      (filePath: string) => {
+        store.dispatch(feedDownloadUpdate(illustID, filePath));
+        setWallpaper(filePath);
+        localStorage.setItem(
+          'feedDownload',
+          JSON.stringify(store.getState().feedDownload)
+        );
+      }
+    );
+  };
 
   const illustTemplate = (
     id: number,
@@ -84,7 +91,7 @@ export default function Ranking() {
               image={url == null ? EmptyPatternImg : url}
             />
           </CardActionArea>
-          {isDownloaded(illustID, feedDate) ? (
+          {illustID in downloads ? (
             <CardContent>
               <IconButton>
                 <CloudDownloadIcon color="primary" />

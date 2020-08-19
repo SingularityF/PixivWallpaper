@@ -1,3 +1,4 @@
 {
-    "downloadFolder": "WallpaperDownloads"
+  "downloadFolder": "WallpaperDownloads",
+  "feedRefreshRate": 3600
 }

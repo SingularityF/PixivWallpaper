@@ -4,10 +4,29 @@ import { remote } from 'electron';
 import { downloadFolder } from '../../constants/defaultConfigs.json';
 import axios from 'axios';
 const mkdirp = require('mkdirp');
+const getSize = require('get-folder-size');
 
 export async function createFolder(folderPath: string) {
   await mkdirp(folderPath);
   return;
+}
+
+export function getFolderSize(callback: any){
+    getSize(getDownloadFolder(), (err, size) => {
+        if (err) { throw err; }       
+        let sizeString = (size / 1024 / 1024).toFixed(2) + ' MB';
+        callback(sizeString);
+      });
+}
+
+export function getDownloadFolder() {
+  return path.resolve(remote.app.getPath('userData'), downloadFolder);
+}
+
+export function showDownloadFolder() {
+  remote.shell.showItemInFolder(
+    path.resolve(remote.app.getPath('userData'), downloadFolder)
+  );
 }
 
 export async function clearDownloads() {

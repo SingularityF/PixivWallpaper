@@ -5,13 +5,17 @@ import { useSelector, useStore } from 'react-redux';
 import { tick, reset } from '../../actions/feedTimerActions';
 import { feedDateUpdate } from '../../actions/feedDateActions';
 import { feedIllustUpdate } from '../../actions/feedIllustActions';
-import StoreData, { IllustData } from '../../constants/storeType';
+import StoreType, { IllustData } from '../../constants/storeType';
 import moment from 'moment';
 import axios from 'axios';
 import {
   feedThumbnailUpdate,
   feedThumbnailReset,
 } from '../../actions/feedThumbnailActions';
+import {
+  feedDownloadUpdate,
+  feedDownloadReset,
+} from '../../actions/feedDownloadActions';
 import { appInitialized } from '../../actions/appInitializedActions';
 import GlobalStyles from '../../constants/styles.json';
 import { downloadImage } from '../DownloadManager/DownloadManager';
@@ -21,7 +25,7 @@ let prevState: any = null;
 
 export default function Feed() {
   const store = useStore();
-  const timer_seconds = useSelector((state: StoreData) => state.feedTimer);
+  const timer_seconds = useSelector((state: StoreType) => state.feedTimer);
 
   let duration = moment.duration(timer_seconds, 'seconds');
 
@@ -39,10 +43,17 @@ export default function Feed() {
       localStorage.getItem('feedThumbnail') == null
         ? {}
         : JSON.parse(localStorage.getItem('feedThumbnail'));
+    let feedDownloadLS =
+      localStorage.getItem('feedDownload') == null
+        ? {}
+        : JSON.parse(localStorage.getItem('feedDownload'));
     store.dispatch(feedDateUpdate(feedDateLS));
     store.dispatch(feedIllustUpdate(feedIllustLS));
     for (const [key, value] of Object.entries(feedThumbnailLS)) {
       store.dispatch(feedThumbnailUpdate(parseInt(key), value));
+    }
+    for (const [key, value] of Object.entries(feedDownloadLS)) {
+      store.dispatch(feedDownloadUpdate(parseInt(key), value));
     }
   }
 
@@ -85,7 +96,10 @@ export default function Feed() {
       prevState.feedIllust != store.getState().feedIllust
     ) {
       store.dispatch(feedThumbnailReset());
-      let currState: StoreData = store.getState();
+      localStorage.setItem('feedThumbnail', '');
+      store.dispatch(feedDownloadReset());
+      localStorage.setItem('feedDownload', '');
+      let currState: StoreType = store.getState();
       currState.feedIllust.forEach((illust: IllustData) => {
         axios
           .get(

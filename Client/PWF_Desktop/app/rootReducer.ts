@@ -6,6 +6,8 @@ import feedDateReducer from './reducers/feedDateReducer';
 import feedIllustReducer from './reducers/feedIllustReducer';
 import feedThumbnailReducer from './reducers/feedThumbnailReducer';
 import appInitializedReducer from './reducers/appInitializedReducer';
+import settingsReducer from './reducers/settingsReducer';
+import feedDownloadReducer from './reducers/feedDownloadReducer';
 // eslint-disable-next-line import/no-cycle
 
 export default function createRootReducer(history: History) {
@@ -16,5 +18,7 @@ export default function createRootReducer(history: History) {
     feedDate: feedDateReducer,
     feedIllust: feedIllustReducer,
     feedThumbnail: feedThumbnailReducer,
+    settings: settingsReducer,
+    feedDownload: feedDownloadReducer,
   });
 }
