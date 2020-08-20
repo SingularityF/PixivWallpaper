@@ -9,6 +9,7 @@ import Ranking from './components/Ranking/Ranking';
 import Navbar from './components/Navbar/Navbar';
 import Settings from './components/Settings/Settings';
 import GlobalStyles from './constants/styles.json';
+import Recommender from './components/Recommender/Recommender';
 import { RouterSharp } from '@material-ui/icons';
 
 // Lazily load routes and code split with webpacck
@@ -42,6 +43,7 @@ export default function Routes() {
         </main>
       </div>
       <Feed />
+      <Recommender />
     </App>
   );
 }
