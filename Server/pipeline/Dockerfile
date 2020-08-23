@@ -36,6 +36,7 @@ RUN pip3 install pandas
 RUN pip3 install requests
 RUN pip3 install chainer
 RUN pip3 install pillow
+RUN pip3 install beautifulsoup4
 
 RUN cd data_upload && npm i
 
