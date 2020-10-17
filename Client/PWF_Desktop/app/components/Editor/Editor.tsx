@@ -62,6 +62,7 @@ export default function Editor() {
         viewMode={1}
       />
       <Button
+        disabled = {editorSelection.path == ''}
         style={{ marginTop: '10px' }}
         variant="contained"
         color="primary"
