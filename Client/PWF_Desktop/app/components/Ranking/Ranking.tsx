@@ -20,6 +20,7 @@ import process from 'process';
 import { remote } from 'electron';
 import path from 'path';
 import { feedDownloadUpdate } from '../../actions/feedDownloadActions';
+import { editorSelectionUpdate } from '../../actions/editorSelectorActions';
 import fs from 'fs';
 import {
   createFolder,
@@ -59,6 +60,7 @@ export default function Ranking() {
       'original',
       (filePath: string) => {
         store.dispatch(feedDownloadUpdate(illustID, filePath));
+        store.dispatch(editorSelectionUpdate(illustID, filePath, feedDate));
         setWallpaper(filePath);
         localStorage.setItem(
           'feedDownload',

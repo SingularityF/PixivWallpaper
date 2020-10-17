@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { Speed, Settings, FormatListNumbered } from '@material-ui/icons';
+import { Speed, Settings, FormatListNumbered, Palette } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import styles from './Navbar.css';
@@ -52,6 +52,14 @@ export default function Navbar() {
                 <FormatListNumbered />
               </ListItemIcon>
               <ListItemText primary="Ranking" />
+            </ListItem>
+          </Link>
+          <Link to="/editor" className={styles.links}>
+            <ListItem button>
+              <ListItemIcon>
+                <Palette />
+              </ListItemIcon>
+              <ListItemText primary="Editor" />
             </ListItem>
           </Link>
           <Link to="/settings" className={styles.links}>

@@ -1,4 +1,5 @@
 import { StateType as SettingsStateType } from '../reducers/settingsReducer';
+import { StateType as EditorSelectionStateType } from '../reducers/editorSelectionReducer';
 
 export default interface StoreData {
   appInitialized: boolean;
@@ -8,6 +9,7 @@ export default interface StoreData {
   feedThumbnail: { [key: number]: string };
   feedDownload: { [key: number]: string };
   settings: SettingsStateType;
+  editorSelection: EditorSelectionStateType;
 }
 
 export interface IllustData {

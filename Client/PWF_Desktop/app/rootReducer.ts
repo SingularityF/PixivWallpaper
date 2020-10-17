@@ -9,6 +9,7 @@ import appInitializedReducer from './reducers/appInitializedReducer';
 import settingsReducer from './reducers/settingsReducer';
 import feedDownloadReducer from './reducers/feedDownloadReducer';
 import recommenderDataReducer from './reducers/recommenderDataReducer';
+import editorSelectionReducer from './reducers/editorSelectionReducer';
 // eslint-disable-next-line import/no-cycle
 
 export default function createRootReducer(history: History) {
@@ -22,5 +23,6 @@ export default function createRootReducer(history: History) {
     settings: settingsReducer,
     feedDownload: feedDownloadReducer,
     recommenderData: recommenderDataReducer,
+    editorSelection: editorSelectionReducer,
   });
 }

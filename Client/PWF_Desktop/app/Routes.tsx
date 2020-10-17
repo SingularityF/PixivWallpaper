@@ -5,6 +5,7 @@ import routes from './constants/routes.json';
 import App from './containers/App';
 import Home from './components/Home';
 import Feed from './components/Feed/Feed';
+import Editor from './components/Editor/Editor';
 import Ranking from './components/Ranking/Ranking';
 import Navbar from './components/Navbar/Navbar';
 import Settings from './components/Settings/Settings';
@@ -35,6 +36,9 @@ export default function Routes() {
             </Route>
             <Route exact path={routes.RANKING}>
               <Ranking />
+            </Route>
+            <Route exact path={routes.EDITOR}>
+              <Editor />
             </Route>
             <Route exact path={routes.SETTINGS}>
               <Settings />

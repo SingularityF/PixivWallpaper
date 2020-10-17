@@ -4783,6 +4783,11 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+cropperjs@^1.5.9:
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-1.5.9.tgz#4ff9d31e02ad04d2fc5df0044207c2ad53d99da8"
+  integrity sha512-aPWlg43sLIcYN4GBXIdyvM09wNPgn1ug+vNVwV8jlb3dbgEX/B34Iw6hrjGSajkUDQBmaCi6uPOevFb7N0yUsw==
+
 cross-env@^7.0.0:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-7.0.2.tgz#bd5ed31339a93a3418ac4f3ca9ca3403082ae5f9"
@@ -11409,6 +11414,13 @@ rc@^1.2.8:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-cropper@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/react-cropper/-/react-cropper-2.1.4.tgz#f637b0762f4d5c4f96ebd1bb7de663b19964b518"
+  integrity sha512-Pgd/Am4N1aUbkb923pmtgybYcV3Vco6KNhJOSUqH+pqdQxpmawapi2cWmD8+r1KscsQP/SGR+UoBU0+AMUpYgg==
+  dependencies:
+    cropperjs "^1.5.9"
 
 react-dom@^16.12.0:
   version "16.13.1"

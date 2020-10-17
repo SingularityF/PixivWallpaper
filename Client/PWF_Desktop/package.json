@@ -245,6 +245,7 @@
     "mkdirp": "^1.0.4",
     "moment": "^2.27.0",
     "react": "^16.13.1",
+    "react-cropper": "^2.1.4",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.21",
     "react-redux": "^7.2.0",

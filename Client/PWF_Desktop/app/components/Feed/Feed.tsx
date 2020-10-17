@@ -30,30 +30,34 @@ export default function Feed() {
   let duration = moment.duration(timer_seconds, 'seconds');
 
   function readLocalStorage() {
-    let feedDateLS =
-      localStorage.getItem('feedDate') == null
-        ? ''
-        : localStorage.getItem('feedDate');
+    try {
+      let feedDateLS =
+        localStorage.getItem('feedDate') == null
+          ? ''
+          : localStorage.getItem('feedDate');
 
-    let feedIllustLS =
-      localStorage.getItem('feedIllust') == null
-        ? []
-        : JSON.parse(localStorage.getItem('feedIllust'));
-    let feedThumbnailLS =
-      localStorage.getItem('feedThumbnail') == null
-        ? {}
-        : JSON.parse(localStorage.getItem('feedThumbnail'));
-    let feedDownloadLS =
-      localStorage.getItem('feedDownload') == null
-        ? {}
-        : JSON.parse(localStorage.getItem('feedDownload'));
-    store.dispatch(feedDateUpdate(feedDateLS));
-    store.dispatch(feedIllustUpdate(feedIllustLS));
-    for (const [key, value] of Object.entries(feedThumbnailLS)) {
-      store.dispatch(feedThumbnailUpdate(parseInt(key), value));
-    }
-    for (const [key, value] of Object.entries(feedDownloadLS)) {
-      store.dispatch(feedDownloadUpdate(parseInt(key), value));
+      let feedIllustLS =
+        localStorage.getItem('feedIllust') == null
+          ? []
+          : JSON.parse(localStorage.getItem('feedIllust'));
+      let feedThumbnailLS =
+        localStorage.getItem('feedThumbnail') == null
+          ? {}
+          : JSON.parse(localStorage.getItem('feedThumbnail'));
+      let feedDownloadLS =
+        localStorage.getItem('feedDownload') == null
+          ? {}
+          : JSON.parse(localStorage.getItem('feedDownload'));
+      store.dispatch(feedDateUpdate(feedDateLS));
+      store.dispatch(feedIllustUpdate(feedIllustLS));
+      for (const [key, value] of Object.entries(feedThumbnailLS)) {
+        store.dispatch(feedThumbnailUpdate(parseInt(key), value));
+      }
+      for (const [key, value] of Object.entries(feedDownloadLS)) {
+        store.dispatch(feedDownloadUpdate(parseInt(key), value));
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -96,9 +100,9 @@ export default function Feed() {
       prevState.feedIllust != store.getState().feedIllust
     ) {
       store.dispatch(feedThumbnailReset());
-      localStorage.setItem('feedThumbnail', '');
+      localStorage.removeItem('feedThumbnail');
       store.dispatch(feedDownloadReset());
-      localStorage.setItem('feedDownload', '');
+      localStorage.removeItem('feedDownload');
       let currState: StoreType = store.getState();
       currState.feedIllust.forEach((illust: IllustData) => {
         axios

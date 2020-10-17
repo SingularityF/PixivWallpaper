@@ -1,5 +1,6 @@
 {
   "HOME": "/",
   "RANKING": "/ranking",
-  "SETTINGS": "/settings"
+  "SETTINGS": "/settings",
+  "EDITOR": "/editor"
 }
