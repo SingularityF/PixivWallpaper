@@ -2,6 +2,7 @@ from pyvirtualdisplay import Display
 import pandas as pd
 import os
 import sys
+import traceback
 import glob
 import time
 import requests
@@ -66,7 +67,8 @@ def process_thumb_prefix(thumb_urls):
 
 
 def large_img_url(url):
-    return url
+    processed_url = 'https://i.pximg.net/img-master' + url.split('img-master')[1]
+    return processed_url
 
 
 def thumb_img_url(url, thumb_prefix):
@@ -168,6 +170,7 @@ if __name__ == '__main__':
 
         print("Loading Pixiv daily rankings")
         load_and_retry(driver, URL_RANKING, MAX_RETRIES)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
         page_title = driver.title
         # Slash not allowed in folder names
         timestamp = page_title.split(" ")[-1].replace('/', '-')
@@ -201,7 +204,7 @@ if __name__ == '__main__':
             thumb_urls.append(artwork.find_element_by_class_name("_work").
                     find_element_by_class_name("_layout-thumbnail").
                     find_element_by_class_name("_thumbnail").
-                    get_attribute("src"))
+                    get_attribute("data-src"))
             medium_urls.append(
                 artwork.find_element_by_class_name("_work").get_attribute(
                     "href"))
@@ -209,14 +212,17 @@ if __name__ == '__main__':
         for i, url in enumerate(medium_urls):
             illustid = illust_ids[i]
             rank = i + 1
+            thumb_url = thumb_urls[i]
             print("\nAnalyzing links of image ranking {}".format(rank))
-            load_and_retry(driver, url, MAX_RETRIES)
+            #load_and_retry(driver, url, MAX_RETRIES)
             try:
-                img_url = driver.find_element_by_css_selector(
-                    "img[src*='pximg.net/img-master/img']").get_attribute(
-                        "src")
+                #img_url = driver.find_element_by_css_selector(
+                #    "img[src*='pximg.net/img-master/img']").get_attribute(
+                #        "src")
+                #print(img_url)
                 downloaded = True
-            except:
+            except Exception:
+                traceback.print_exc()
                 downloaded = False
                 df_artworks = df_artworks.append(
                     {
@@ -238,15 +244,15 @@ if __name__ == '__main__':
             output_name_t = "{}_t".format(rank)
             output_name_o = "{}_o".format(rank)
             print("Downloading image ranking {}".format(rank))
-            compressed_path = download_image([large_img_url(img_url)],
+            compressed_path = download_image([large_img_url(thumb_url)],
                     driver.get_cookies(), output_name_c,
-                    driver.current_url, output_dir)
-            thumbnail_path = download_image([thumb_img_url(img_url, thumb_prefix)],
+                    url, output_dir)
+            thumbnail_path = download_image([thumb_url],
                     driver.get_cookies(), output_name_t,
-                    driver.current_url, output_dir)
-            original_path = download_image(orig_img_url(img_url),
+                    url, output_dir)
+            original_path = download_image(orig_img_url(large_img_url(thumb_url)),
                     driver.get_cookies(), output_name_o,
-                    driver.current_url, output_dir)
+                    url, output_dir)
             compressed = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(compressed_path)}"
             thumbnail = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(thumbnail_path)}"
             original = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(original_path)}"
