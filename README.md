@@ -6,7 +6,7 @@
 
 Set Windows wallpaper with daily Pixiv high ranking illustrations
 
-# :warning: This application is no longer functional due to Pixiv's [new captcha policy](https://policies.pixiv.net/en.html) adopted in October 2020 :warning:
+# :warning: This application is temporarily down due to Pixiv's [new captcha policy](https://policies.pixiv.net/en.html) adopted in October 2020, a patch will be applied before the app goes back online :warning:
 
 将p站每日排行设为壁纸/桌布 [使用说明&下载](https://github.com/SingularityF/PixivWallpaper/blob/master/README.cn.md)
 
