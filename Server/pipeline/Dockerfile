@@ -17,31 +17,17 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get update
 RUN apt-get install -y nodejs
 RUN curl -L https://www.npmjs.com/install.sh | sh
-# Install Google Cloud SDK
-#ENV CLOUDSDK_INSTALL_DIR /usr/local/gcloud/ 
-#RUN curl https://sdk.cloud.google.com | bash
-#ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin 
 RUN export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` && echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update
 RUN apt-get -y install gcsfuse
-#RUN gcloud auth activate-service-account --key-file service_account.json
-#RUN gcloud config set project pixivwallpaper
 RUN mkdir images
 
 RUN pip3 install --upgrade pip
-RUN pip3 install selenium
-RUN pip3 install pyvirtualdisplay
-RUN pip3 install pandas
-RUN pip3 install requests
-RUN pip3 install chainer
-RUN pip3 install pillow
-RUN pip3 install beautifulsoup4
+RUN pip3 install -r requirements.txt
 
 RUN cd data_upload && npm i
 
-#RUN git clone https://github.com/tsurumeso/waifu2x-chainer.git
-
 COPY ./geckodriver /usr/local/bin/
 RUN chmod a+x /usr/local/bin/geckodriver
-
+ENV GOOGLE_APPLICATION_CREDENTIALS="/usr/local/PixivWallpaper/service_account.json"

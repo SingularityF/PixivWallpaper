@@ -72,6 +72,7 @@ saveRanking = (data) => {
     IllustID: parseInt(data["IllustID"]),
     Downloaded: Boolean(parseInt(data["Downloaded"])),
     DateString: data["Timestamp"],
+    Adult: data["Adult"],
     Created: new Date(Date.now()),
     Updated: new Date(Date.now()),
   };

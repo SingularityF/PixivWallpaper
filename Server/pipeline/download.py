@@ -147,6 +147,26 @@ def load_and_retry(driver, url, retries):
     raise Exception('Page load failure')
 
 
+def detect_safe_search_uri(uri):
+    """Detects unsafe features in the file located in Google Cloud Storage or
+    on the Web."""
+    from google.cloud import vision
+    client = vision.ImageAnnotatorClient()
+    image = vision.Image()
+    image.source.image_uri = uri
+    response = client.safe_search_detection(image=image)
+    safe = response.safe_search_annotation
+    # Names of likelihood from google.cloud.vision.enums
+    likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
+                       'LIKELY', 'VERY_LIKELY')
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
+    return likelihood_name[safe.adult]
+
+
 if __name__ == '__main__':
     try:
         # ========== Initial Configurations ========== #
@@ -263,6 +283,7 @@ if __name__ == '__main__':
                     "Compressed": compressed,
                     "Thumbnail": thumbnail,
                     "Original": original,
+                    "Adult": detect_safe_search_uri(thumbnail),
                     "Downloaded": downloaded,
                     "Timestamp": timestamp
                 },
