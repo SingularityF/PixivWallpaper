@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { useSelector, useStore } from 'react-redux';
 import StoreData from '../../constants/storeType';
+import { Chip, Switch, FormControlLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import GlobalStyles from '../../constants/styles.json';
 import { setWallpaper } from '../WallpaperSetter/WallpaperSetter';
@@ -45,6 +46,14 @@ export default function Ranking() {
   const thumbnails = useSelector((state: StoreData) => state.feedThumbnail);
   const downloads = useSelector((state: StoreData) => state.feedDownload);
 
+  const [state, setState] = useState({
+    hideAdult: true,
+  });
+
+  const handleChange = (event: any) => {
+    setState({ ...state, hideAdult: event.target.checked });
+  };
+
   let downloadAndSet = async (illustID: number, feedDate: string) => {
     let imageUrl = await axios
       .get(
@@ -73,36 +82,48 @@ export default function Ranking() {
   const illustTemplate = (
     id: number,
     illustID: number,
+    adult: string,
     url: string,
     feedDate: string
   ) => {
-    return (
-      <Grid item align="center" xs={12} sm={6} md={4} key={id}>
-        <Card key={id} className={classes.root}>
-          <CardActionArea
-            onClick={() => {
-              downloadAndSet(illustID, feedDate);
-            }}
-          >
-            <Box textAlign="center" p={1}>
-              # {id}
-            </Box>
-            <CardMedia
-              component="img"
-              className={classes.media}
-              image={url == null ? EmptyPatternImg : url}
-            />
-          </CardActionArea>
-          {illustID in downloads ? (
-            <CardContent>
-              <IconButton>
-                <CloudDownloadIcon color="primary" />
-              </IconButton>
-            </CardContent>
-          ) : null}
-        </Card>
-      </Grid>
-    );
+    if ((adult == 'LIKELY' || adult == 'VERY_LIKELY') && state.hideAdult) {
+      return '';
+    } else {
+      return (
+        <Grid item align="center" xs={12} sm={6} md={4} key={id}>
+          <Box style={{ marginBottom: '8px', height: '24px' }}>
+            {adult == 'LIKELY' || adult == 'VERY_LIKELY' ? (
+              <Chip size="small" label="Adult" color="secondary" />
+            ) : (
+              <Box />
+            )}
+          </Box>
+          <Card key={id} className={classes.root}>
+            <CardActionArea
+              onClick={() => {
+                downloadAndSet(illustID, feedDate);
+              }}
+            >
+              <Box textAlign="center" p={1}>
+                # {id}
+              </Box>
+              <CardMedia
+                component="img"
+                className={classes.media}
+                image={url == null ? EmptyPatternImg : url}
+              />
+            </CardActionArea>
+            {illustID in downloads ? (
+              <CardContent>
+                <IconButton>
+                  <CloudDownloadIcon color="primary" />
+                </IconButton>
+              </CardContent>
+            ) : null}
+          </Card>
+        </Grid>
+      );
+    }
   };
 
   return (
@@ -114,16 +135,28 @@ export default function Ranking() {
         height: `calc(100vh - 30px - ${GlobalStyles.footerHeight}px)`,
       }}
     >
-      <h4>
-        Artworks can be missing because they either contain sensitive content or
-        have already appeared in previous feeds.
+      <h4 style={{ marginBottom: '10px' }}>
+        Artworks can be missing because they have already appeared in previous
+        feeds.
       </h4>
+      <FormControlLabel
+        style={{ marginBottom: '20px' }}
+        control={
+          <Switch
+            checked={state.hideAdult}
+            onChange={handleChange}
+            color="secondary"
+          />
+        }
+        label="Hide adult content"
+      />
       {illusts.length == 0 ? <CircularProgress color="secondary" /> : null}
       <Grid container spacing={3}>
         {illusts.map((data) =>
           illustTemplate(
             data.Rank,
             data.IllustID,
+            data.Adult,
             thumbnails[data.IllustID],
             feedDate
           )

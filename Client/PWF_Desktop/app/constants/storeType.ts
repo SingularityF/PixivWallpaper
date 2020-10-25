@@ -15,4 +15,5 @@ export default interface StoreData {
 export interface IllustData {
   Rank: number;
   IllustID: number;
+  Adult: string;
 }
