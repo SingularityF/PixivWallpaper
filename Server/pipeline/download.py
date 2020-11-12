@@ -219,6 +219,8 @@ if __name__ == '__main__':
         illust_ids = []
         thumb_urls = []
         artworks = driver.find_elements_by_class_name("ranking-item")
+        # Only get top 50
+        artworks = artworks[:50]
         for artwork in artworks:
             illust_ids.append(artwork.get_attribute("data-id"))
             thumb_urls.append(artwork.find_element_by_class_name("_work").
