@@ -7,6 +7,7 @@ import glob
 import time
 import requests
 import datetime
+import cv2
 from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -275,6 +276,9 @@ if __name__ == '__main__':
             original_path = download_image(orig_img_url(large_img_url(thumb_url)),
                     driver.get_cookies(), output_name_o,
                     url, output_dir)
+            compressed_shape = cv2.imread(compressed_path).shape
+            thumbnail_shape = cv2.imread(thumbnail_path).shape
+            original_shape = cv2.imread(original_path).shape
             compressed = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(compressed_path)}"
             thumbnail = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(thumbnail_path)}"
             original = f"{BUCKET_URL_PREFIX}/{timestamp}/{os.path.basename(original_path)}"
@@ -283,8 +287,14 @@ if __name__ == '__main__':
                     "Rank": rank,
                     "IllustID": illustid,
                     "Compressed": compressed,
+                    "CompressedHeight": compressed_shape[0],
+                    "CompressedWidth": compressed_shape[1],
                     "Thumbnail": thumbnail,
+                    "ThumbnailHeight": thumbnail_shape[0],
+                    "ThumbnailWidth": thumbnail_shape[1],
                     "Original": original,
+                    "OriginalHeight": original_shape[0],
+                    "OriginalWidth": original_shape[1],
                     "Adult": detect_safe_search_uri(thumbnail),
                     "Downloaded": downloaded,
                     "Timestamp": timestamp

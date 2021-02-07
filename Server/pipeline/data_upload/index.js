@@ -86,8 +86,14 @@ saveLocation = (data) => {
   data = {
     IllustID: parseInt(data["IllustID"]),
     Thumbnail: data["Thumbnail"],
+    ThumbnailHeight: parseInt(data["ThumbnailHeight"]),
+    ThumbnailWidth: parseInt(data["ThumbnailWidth"]),
     Original: data["Original"],
+    OriginalHeight: parseInt(data["OriginalHeight"]),
+    OriginalWidth: parseInt(data["OriginalWidth"]),
     Compressed: data["Compressed"],
+    CompressedHeight: parseInt(data["CompressedHeight"]),
+    CompressedWidth: parseInt(data["CompressedWidth"]),
     Created: new Date(Date.now()),
     Updated: new Date(Date.now()),
   };
