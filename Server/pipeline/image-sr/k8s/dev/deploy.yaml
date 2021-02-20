@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ${DOCKER_IMG_NAME}
+spec:
+  containers:
+  - name: ${DOCKER_IMG_NAME}
+    image: gcr.io/${GCP_PROJ}/${DOCKER_IMG_NAME}:latest
+  nodeSelector:
+    cloud.google.com/gke-nodepool: ${NODE_POOL}
+  restartPolicy: Never
+  tolerations:
+  - key: "EvictSystem"
+    operator: "Exists"
+    effect: "NoSchedule"

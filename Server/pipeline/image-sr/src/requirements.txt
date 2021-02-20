@@ -1,0 +1,6 @@
+Pillow
+numpy
+requests
+google-cloud-storage
+tensorflow-hub
+google-cloud-pubsub
