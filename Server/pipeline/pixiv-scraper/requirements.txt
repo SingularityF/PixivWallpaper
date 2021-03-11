@@ -1,7 +1,0 @@
-selenium
-pyvirtualdisplay
-pandas
-requests
-beautifulsoup4
-google-cloud-vision
-opencv-python

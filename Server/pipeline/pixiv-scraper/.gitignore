@@ -1,2 +1,7 @@
-service_account.json
-config.yaml
+nohup.out
+src/script_configs.sh
+src/Dockerfile
+src/data.json
+src/service_account.json
+src/__pycache__/
+src/imgs/

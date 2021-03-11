@@ -1,0 +1,5 @@
+#!/bin/bash
+
+GCP_PROJ=""
+DOWNLOAD_BUCKET_NAME=""
+MONGO_URI=""
