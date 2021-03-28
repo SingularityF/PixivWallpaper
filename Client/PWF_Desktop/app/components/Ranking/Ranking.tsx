@@ -29,6 +29,7 @@ import {
 } from '../DownloadManager/DownloadManager';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
+let urlJoin = require('url-join');
 const useStyles = makeStyles({
   root: {
     maxWidth: 240,
@@ -45,6 +46,7 @@ export default function Ranking() {
   const illusts = useSelector((state: StoreData) => state.feedIllust);
   const thumbnails = useSelector((state: StoreData) => state.feedThumbnail);
   const downloads = useSelector((state: StoreData) => state.feedDownload);
+  const apiURL = useSelector((store: StoreData) => store.apiURL);
 
   const [state, setState] = useState({
     hideAdult: true,
@@ -57,7 +59,7 @@ export default function Ranking() {
   let downloadAndSet = async (illustID: number, feedDate: string) => {
     let imageUrl = await axios
       .get(
-        `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/original/${illustID}`
+        urlJoin(apiURL, 'image', 'original', illustID.toString())
       )
       .then((res) => {
         return res.data.url;
@@ -150,7 +152,9 @@ export default function Ranking() {
         }
         label="Hide adult content"
       />
-      {illusts.length == 0 ? <CircularProgress color="secondary" /> : null}
+      <Box>
+        {illusts.length == 0 ? <CircularProgress color="secondary" /> : null}
+      </Box>
       <Grid container spacing={3}>
         {illusts.map((data) =>
           illustTemplate(

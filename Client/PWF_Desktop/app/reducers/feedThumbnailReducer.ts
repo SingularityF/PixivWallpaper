@@ -4,8 +4,10 @@ interface ActionType {
   data: string;
 }
 
+let initialState = {};
+
 export default function feedThumbnailReducer(
-  state: { [key: number]: string } = {},
+  state: { [key: number]: string } = initialState,
   action: ActionType
 ) {
   switch (action.type) {
@@ -13,6 +15,8 @@ export default function feedThumbnailReducer(
       return {};
     case 'THUMBNAIL_UPDATE':
       return { ...state, [action.key]: action.data };
+    case 'RESET_ALL':
+      return initialState;
     default:
       return state;
   }

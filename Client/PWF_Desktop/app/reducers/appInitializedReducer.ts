@@ -1,5 +1,5 @@
 interface ActionType {
-  type: 'INIT_DONE';
+  type: string;
 }
 
 export default function appInitializedReducer(

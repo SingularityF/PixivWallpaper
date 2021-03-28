@@ -19,7 +19,9 @@ import {
 import { appInitialized } from '../../actions/appInitializedActions';
 import GlobalStyles from '../../constants/styles.json';
 import { downloadImage } from '../DownloadManager/DownloadManager';
+import { updateAPIURL } from '../../actions/APIConnectionActions';
 
+let urlJoin = require('url-join');
 let timer: any = null;
 let prevState: any = null;
 
@@ -31,6 +33,10 @@ export default function Feed() {
 
   function readLocalStorage() {
     try {
+      let apiURLLS =
+      localStorage.getItem('apiURL') == null
+        ? ''
+        : localStorage.getItem('apiURL');
       let feedDateLS =
         localStorage.getItem('feedDate') == null
           ? ''
@@ -48,6 +54,7 @@ export default function Feed() {
         localStorage.getItem('feedDownload') == null
           ? {}
           : JSON.parse(localStorage.getItem('feedDownload'));
+      store.dispatch(updateAPIURL(apiURLLS));
       store.dispatch(feedDateUpdate(feedDateLS));
       store.dispatch(feedIllustUpdate(feedIllustLS));
       for (const [key, value] of Object.entries(feedThumbnailLS)) {
@@ -63,6 +70,7 @@ export default function Feed() {
 
   useEffect(() => {
     if (
+      store.getState().apiURL != prevState.apiURL ||
       store.getState().appInitialized &&
       prevState.feedTimer >= 0 &&
       store.getState().feedTimer <= 0
@@ -70,7 +78,7 @@ export default function Feed() {
       store.dispatch(reset());
       axios
         .get(
-          'https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/pipeline/date/latest'
+          urlJoin(store.getState().apiURL, 'pipeline', 'date', 'latest')
         )
         .then((res) => {
           localStorage.setItem('feedDate', res.data.latest);
@@ -83,9 +91,7 @@ export default function Feed() {
     ) {
       axios
         .get(
-          `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/ranking/unique/${
-            store.getState().feedDate
-          }`
+          urlJoin(store.getState().apiURL, 'ranking', 'unique', store.getState().feedDate)
         )
         .then((res) => {
           localStorage.setItem(
@@ -107,7 +113,7 @@ export default function Feed() {
       currState.feedIllust.forEach((illust: IllustData) => {
         axios
           .get(
-            `https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend/image/thumbnail/${illust.IllustID}`
+            urlJoin(store.getState().apiURL, 'image', 'thumbnail', illust.IllustID.toString())
           )
           .then((res) => {
             downloadImage(

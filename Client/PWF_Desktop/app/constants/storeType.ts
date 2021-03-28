@@ -3,6 +3,7 @@ import { StateType as EditorSelectionStateType } from '../reducers/editorSelecti
 
 export default interface StoreData {
   appInitialized: boolean;
+  apiURL: string;
   feedTimer: number;
   feedDate: string;
   feedIllust: Array<IllustData>;

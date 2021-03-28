@@ -253,7 +253,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.5",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "url-join": "^4.0.1"
   },
   "devEngines": {
     "node": ">=7.x",

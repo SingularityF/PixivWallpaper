@@ -10,12 +10,14 @@ import settingsReducer from './reducers/settingsReducer';
 import feedDownloadReducer from './reducers/feedDownloadReducer';
 import recommenderDataReducer from './reducers/recommenderDataReducer';
 import editorSelectionReducer from './reducers/editorSelectionReducer';
+import APIConnectionReducer from './reducers/APIConnectionReducer';
 // eslint-disable-next-line import/no-cycle
 
 export default function createRootReducer(history: History) {
   return combineReducers({
     router: connectRouter(history),
     appInitialized: appInitializedReducer,
+    apiURL: APIConnectionReducer,
     feedTimer: feedTimerReducer,
     feedDate: feedDateReducer,
     feedIllust: feedIllustReducer,

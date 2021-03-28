@@ -11,7 +11,8 @@ export async function createFolder(folderPath: string) {
   return;
 }
 
-export function getFolderSize(callback: any) {
+export async function getFolderSize(callback: any) {
+  await createFolder(getDownloadFolder());
   getSize(getDownloadFolder(), (err, size) => {
     if (err) {
       throw err;
@@ -25,15 +26,13 @@ export function getDownloadFolder() {
   return path.resolve(remote.app.getPath('userData'), downloadFolder);
 }
 
-export function showDownloadFolder() {
-  remote.shell.showItemInFolder(
-    path.resolve(remote.app.getPath('userData'), downloadFolder)
-  );
+export async function showDownloadFolder() {
+  await createFolder(getDownloadFolder());
+  remote.shell.showItemInFolder(getDownloadFolder());
 }
 
 export async function clearDownloads() {
-  let folderPath = path.resolve(remote.app.getPath('userData'), downloadFolder);
-  fs.rmdirSync(folderPath, { recursive: true });
+  fs.rmdirSync(getDownloadFolder(), { recursive: true });
 }
 
 export function isDownloaded(illustID: number, feedDate: string) {

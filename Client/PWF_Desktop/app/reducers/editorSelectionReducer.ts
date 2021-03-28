@@ -11,8 +11,10 @@ interface ActionType {
   feedDate: string;
 }
 
+let initialState = { illustID: 0, path: '', feedDate: '' };
+
 export default function editorSelectionReducer(
-  state: StateType = { illustID: 0, path: '', feedDate: '' },
+  state: StateType = initialState,
   action: ActionType
 ) {
   switch (action.type) {
@@ -22,6 +24,8 @@ export default function editorSelectionReducer(
         path: action.path,
         feedDate: action.feedDate,
       };
+    case 'RESET_ALL':
+      return initialState;
     default:
       return state;
   }
