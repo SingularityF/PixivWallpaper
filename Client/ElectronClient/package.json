@@ -34,7 +34,7 @@
     "wallpaper": "^4.4.1"
   },
   "devDependencies": {
-    "electron": "^7.2.4",
+    "electron": "^9.4.0",
     "electron-builder": "^22.1.0"
   }
 }
