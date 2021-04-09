@@ -1,5 +1,4 @@
 const fs = require("fs");
-const d3 = require("d3");
 const yaml = require("js-yaml");
 const { MongoClient } = require("mongodb");
 
@@ -9,7 +8,6 @@ const client = new MongoClient(mongodbConnection, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
-let csvFilePath = "";
 let queueCounter = 0;
 let dateString = "";
 
@@ -70,6 +68,7 @@ saveRanking = (data) => {
         IllustID: parseInt(data["IllustID"]),
         Downloaded: Boolean(parseInt(data["Downloaded"])),
         DateString: data["Timestamp"],
+        AspectRatio: data["AspectRatio"],
         Adult: data["Adult"],
         Created: new Date(Date.now()),
         Updated: new Date(Date.now()),
@@ -99,19 +98,13 @@ saveLocation = (data) => {
 };
 
 client.connect((err) => {
-    //csvFilePath = fs.readFileSync("csv_path", "utf8").trim();
-    csvFilePath = "data.csv"
-
-    fs.readFile(csvFilePath, "utf8", (err, csvData) => {
-        let scraperData = d3.csvParse(csvData);
+    fs.readFile("data.json", "utf8", (err, rawData) => {
+        let scraperData = JSON.parse(rawData);
         dateString = scraperData[0]["Timestamp"];
-        for (let idx in scraperData) {
-            if (idx == "columns") continue;
-            row = scraperData[idx];
-            saveRanking(row);
-            saveLocation(row);
-        }
+        scraperData.forEach((entry) => {
+            saveRanking(entry);
+            saveLocation(entry);
+        })
         counterCheck();
     });
 });
-

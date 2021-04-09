@@ -1,8 +1,7 @@
 selenium
 pyvirtualdisplay
-pandas
 requests
 beautifulsoup4
-google-cloud-vision
 opencv-python
+google-cloud-vision
 google-cloud-storage

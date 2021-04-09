@@ -1,7 +1,7 @@
 from pyvirtualdisplay import Display
-import pandas as pd
 import os
 import sys
+import json
 import shutil
 import glob
 import time
@@ -170,16 +170,7 @@ if __name__ == '__main__':
     project_id = os.environ['GCP_PROJ']
     bucket_name = os.environ['DOWNLOAD_BUCKET_NAME']
     BUCKET_URL_PREFIX = f"https://storage.googleapis.com/{bucket_name}"
-
-    df_artworks = pd.DataFrame({
-        "Rank": [],
-        "IllustID": [],
-        "Compressed": [],
-        "Thumbnail": [],
-        "Original": [],
-        "Downloaded": [],
-        "Timestamp": []
-    })
+    json_data = []
 
     print("Initializing")
     try:
@@ -213,7 +204,7 @@ if __name__ == '__main__':
         # ----- Detect Duplicate Download -----
         if os.path.exists(output_dir):
             # Is previous download successful?
-            if os.path.exists(csv_path):
+            if os.path.exists("./data.json"):
                 print("Already downloaded, exiting")
                 exit(0)
             else:
@@ -258,22 +249,25 @@ if __name__ == '__main__':
             compressed_path = download_image([large_img_url(thumb_url)],
                                              driver.get_cookies(), output_name_c,
                                              url, output_dir)
-            upload_blob(bucket_name, compressed_path, f"{timestamp}/compressed/{os.path.basename(compressed_path)}")
+            upload_blob(bucket_name, compressed_path,
+                        f"{timestamp}/compressed/{os.path.basename(compressed_path)}")
             thumbnail_path = download_image([thumb_url],
                                             driver.get_cookies(), output_name_t,
                                             url, output_dir)
-            upload_blob(bucket_name, thumbnail_path, f"{timestamp}/thumbnail/{os.path.basename(thumbnail_path)}")
+            upload_blob(bucket_name, thumbnail_path,
+                        f"{timestamp}/thumbnail/{os.path.basename(thumbnail_path)}")
             original_path = download_image(orig_img_url(large_img_url(thumb_url)),
                                            driver.get_cookies(), output_name_o,
                                            url, output_dir)
-            upload_blob(bucket_name, original_path, f"{timestamp}/original/{os.path.basename(original_path)}")
+            upload_blob(bucket_name, original_path,
+                        f"{timestamp}/original/{os.path.basename(original_path)}")
             compressed_shape = cv2.imread(compressed_path).shape
             thumbnail_shape = cv2.imread(thumbnail_path).shape
             original_shape = cv2.imread(original_path).shape
             compressed = f"{BUCKET_URL_PREFIX}/{timestamp}/compressed/{os.path.basename(compressed_path)}"
             thumbnail = f"{BUCKET_URL_PREFIX}/{timestamp}/thumbnail/{os.path.basename(thumbnail_path)}"
             original = f"{BUCKET_URL_PREFIX}/{timestamp}/original/{os.path.basename(original_path)}"
-            df_artworks = df_artworks.append(
+            json_data.append(
                 {
                     "Rank": rank,
                     "IllustID": illustid,
@@ -287,11 +281,12 @@ if __name__ == '__main__':
                     "OriginalHeight": original_shape[0],
                     "OriginalWidth": original_shape[1],
                     "Adult": detect_safe_search_uri(thumbnail),
+                    "AspectRatio": original_shape[1]/original_shape[0],
                     "Downloaded": downloaded,
                     "Timestamp": timestamp
-                },
-                ignore_index=True)
-        df_artworks.to_csv("data.csv", index=False)
+                })
+        with open("data.json","w") as f:
+            json.dump(json_data, f)
     except:
         driver.quit()
         display.stop()
