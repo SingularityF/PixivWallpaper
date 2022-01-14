@@ -10,6 +10,9 @@ Set Windows wallpaper with daily Pixiv high ranking illustrations
 
 Pixivのイラストデイリーランキングから一番いいのを壁紙にするソフトです [使い方＆ダウンロード](https://github.com/SingularityF/PixivWallpaper/blob/master/README.jp.md)
 
+## ⚠ANOUNCEMENT⚠
+This repo is not actively maintained right now. The following sections have outdated information. However, there is a beta version available that can be built from the Client/PWF_Desktop folder. You can use https://us-central1-pixivwallpaper.cloudfunctions.net/PWF_backend as the API URL in the Settings tab. Please note that this beta version is a work in progress and can have bugs.
+
 ## Demo
 
 Decorate your desktop with just a simple click.
