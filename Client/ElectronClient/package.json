@@ -28,7 +28,7 @@
     "jquery": "^3.5.0",
     "macaddress": "^0.2.9",
     "mkdirp": "^0.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "popper.js": "^1.16.0",
     "qs": "^6.9.0",
     "wallpaper": "^4.4.1"
